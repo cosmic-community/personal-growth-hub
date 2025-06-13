@@ -23,7 +23,7 @@ export default async function BlogPage() {
       id: '1',
       title: '5 Simple Mindfulness Techniques for Busy Professionals',
       slug: '5-mindfulness-techniques-busy-professionals',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-15T10:00:00Z',
       modified_at: '2024-01-15T10:00:00Z',
       metadata: {
@@ -42,7 +42,7 @@ export default async function BlogPage() {
       id: '2',
       title: 'The Science of Habit Formation: How to Build Lasting Change',
       slug: 'science-habit-formation-lasting-change',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-12T14:30:00Z',
       modified_at: '2024-01-12T14:30:00Z',
       metadata: {
@@ -61,7 +61,7 @@ export default async function BlogPage() {
       id: '3',
       title: 'Overcoming Imposter Syndrome: A Therapist\'s Guide',
       slug: 'overcoming-imposter-syndrome-therapist-guide',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-10T09:15:00Z',
       modified_at: '2024-01-10T09:15:00Z',
       metadata: {
@@ -80,7 +80,7 @@ export default async function BlogPage() {
       id: '4',
       title: 'The Art of Setting Boundaries: Protecting Your Mental Health',
       slug: 'art-setting-boundaries-mental-health',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-08T16:45:00Z',
       modified_at: '2024-01-08T16:45:00Z',
       metadata: {
@@ -99,7 +99,7 @@ export default async function BlogPage() {
       id: '5',
       title: 'Managing Anxiety in Uncertain Times: Evidence-Based Strategies',
       slug: 'managing-anxiety-uncertain-times-strategies',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-05T11:20:00Z',
       modified_at: '2024-01-05T11:20:00Z',
       metadata: {
@@ -118,7 +118,7 @@ export default async function BlogPage() {
       id: '6',
       title: 'The Power of Gratitude: More Than Just Positive Thinking',
       slug: 'power-gratitude-positive-thinking',
-      type_slug: 'posts',
+      type_slug: 'blog-posts',
       created_at: '2024-01-03T13:10:00Z',
       modified_at: '2024-01-03T13:10:00Z',
       metadata: {
