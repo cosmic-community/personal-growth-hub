@@ -23,6 +23,7 @@ export default async function CategoriesPage() {
       id: '1',
       title: 'Mindfulness & Meditation',
       slug: 'mindfulness-meditation',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
@@ -38,6 +39,7 @@ export default async function CategoriesPage() {
       id: '2',
       title: 'Relationships & Communication',
       slug: 'relationships-communication',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
@@ -53,6 +55,7 @@ export default async function CategoriesPage() {
       id: '3',
       title: 'Career & Professional Growth',
       slug: 'career-professional-growth',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
@@ -68,6 +71,7 @@ export default async function CategoriesPage() {
       id: '4',
       title: 'Anxiety & Stress Management',
       slug: 'anxiety-stress-management',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
@@ -83,6 +87,7 @@ export default async function CategoriesPage() {
       id: '5',
       title: 'Self-Confidence & Self-Esteem',
       slug: 'self-confidence-esteem',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
@@ -98,6 +103,7 @@ export default async function CategoriesPage() {
       id: '6',
       title: 'Goal Setting & Achievement',
       slug: 'goal-setting-achievement',
+      type_slug: 'categories',
       created_at: '2024-01-01T00:00:00Z',
       modified_at: '2024-01-01T00:00:00Z',
       metadata: {
