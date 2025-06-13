@@ -12,12 +12,7 @@ export interface UserAccount {
     darkMode: boolean;
     language: string;
   };
-  activityLog?: Array<{
-    id: string;
-    action: string;
-    timestamp: string;
-    details?: Record<string, any>;
-  }>;
+  activityLog?: ActivityLogEntry[];
 }
 
 export interface UserSession {
@@ -60,6 +55,7 @@ export class UserDatabase {
         activityLog: [
           {
             id: 'activity-1',
+            userId: 'demo-user-1',
             action: 'account_created',
             timestamp: '2024-01-01T00:00:00.000Z',
             details: { source: 'demo' }
@@ -126,8 +122,9 @@ export class UserDatabase {
       throw new Error('An account with this email already exists');
     }
 
+    const newUserId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const newUser: UserAccount = {
-      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: newUserId,
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
@@ -142,6 +139,7 @@ export class UserDatabase {
       activityLog: [
         {
           id: `activity-${Date.now()}`,
+          userId: newUserId,
           action: 'account_created',
           timestamp: new Date().toISOString(),
           details: { source: 'signup' }
