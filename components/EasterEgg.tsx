@@ -10,6 +10,7 @@ export default function EasterEgg({}: EasterEggProps) {
   const [command, setCommand] = useState<string>('');
   const [isRocketFlying, setIsRocketFlying] = useState<boolean>(false);
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
+  const [showSoccerGoal, setShowSoccerGoal] = useState<boolean>(false);
 
   const handleHeartClick = (): void => {
     setShowModal(true);
@@ -30,6 +31,10 @@ export default function EasterEgg({}: EasterEggProps) {
       setShowModal(false);
       setCommand('');
       window.open('https://www.linkedin.com/in/jeffhovinga/', '_blank');
+    } else if (command.toLowerCase().trim() === 'goal') {
+      setShowModal(false);
+      setCommand('');
+      triggerSoccerGoalAnimation();
     } else {
       // For future commands, we can add more conditions here
       setCommand('');
@@ -58,6 +63,15 @@ export default function EasterEgg({}: EasterEggProps) {
     setTimeout(() => {
       setShowFireworks(false);
     }, 4000);
+  };
+
+  const triggerSoccerGoalAnimation = (): void => {
+    setShowSoccerGoal(true);
+    
+    // Hide soccer goal animation after 3 seconds
+    setTimeout(() => {
+      setShowSoccerGoal(false);
+    }, 3000);
   };
 
   const closeModal = (): void => {
@@ -210,6 +224,34 @@ export default function EasterEgg({}: EasterEggProps) {
         </div>
       )}
 
+      {/* Soccer Goal Animation */}
+      {showSoccerGoal && (
+        <div className="fixed inset-0 pointer-events-none z-40 flex items-center justify-center">
+          <div className="soccer-field">
+            {/* Soccer Goal Net */}
+            <div className="goal-net">
+              <div className="goal-post left-post"></div>
+              <div className="goal-post right-post"></div>
+              <div className="crossbar"></div>
+              <div className="net-lines">
+                <div className="net-line vertical-1"></div>
+                <div className="net-line vertical-2"></div>
+                <div className="net-line vertical-3"></div>
+                <div className="net-line horizontal-1"></div>
+                <div className="net-line horizontal-2"></div>
+                <div className="net-line horizontal-3"></div>
+              </div>
+            </div>
+            
+            {/* Soccer Ball */}
+            <div className="soccer-ball">⚽</div>
+            
+            {/* Goal Text */}
+            <div className="goal-text">GOAL!</div>
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         .rocket-flight {
           position: absolute;
@@ -221,6 +263,127 @@ export default function EasterEgg({}: EasterEggProps) {
         
         .rocket-icon {
           animation: rocketSpin 0.5s linear infinite;
+        }
+        
+        .soccer-field {
+          position: relative;
+          width: 400px;
+          height: 300px;
+          animation: soccerFieldAppear 0.5s ease-out forwards;
+        }
+        
+        .goal-net {
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 120px;
+          height: 80px;
+          border: 3px solid #ffffff;
+          border-right: none;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          animation: goalNetShake 0.8s ease-out 1.2s;
+        }
+        
+        .goal-post {
+          position: absolute;
+          background: #ffffff;
+          border-radius: 2px;
+        }
+        
+        .left-post {
+          left: -3px;
+          top: -3px;
+          width: 6px;
+          height: 86px;
+        }
+        
+        .right-post {
+          right: -3px;
+          top: -3px;
+          width: 6px;
+          height: 86px;
+        }
+        
+        .crossbar {
+          left: -3px;
+          top: -3px;
+          width: 126px;
+          height: 6px;
+        }
+        
+        .net-lines {
+          position: absolute;
+          inset: 0;
+        }
+        
+        .net-line {
+          position: absolute;
+          background: rgba(255, 255, 255, 0.6);
+        }
+        
+        .vertical-1 {
+          left: 30px;
+          top: 0;
+          width: 1px;
+          height: 100%;
+        }
+        
+        .vertical-2 {
+          left: 60px;
+          top: 0;
+          width: 1px;
+          height: 100%;
+        }
+        
+        .vertical-3 {
+          left: 90px;
+          top: 0;
+          width: 1px;
+          height: 100%;
+        }
+        
+        .horizontal-1 {
+          left: 0;
+          top: 25px;
+          width: 100%;
+          height: 1px;
+        }
+        
+        .horizontal-2 {
+          left: 0;
+          top: 50px;
+          width: 100%;
+          height: 1px;
+        }
+        
+        .horizontal-3 {
+          left: 0;
+          top: 75px;
+          width: 100%;
+          height: 1px;
+        }
+        
+        .soccer-ball {
+          position: absolute;
+          left: 50px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 30px;
+          animation: ballKick 1.5s ease-out forwards;
+        }
+        
+        .goal-text {
+          position: absolute;
+          top: -40px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 36px;
+          font-weight: bold;
+          color: #ffffff;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+          animation: goalTextAppear 0.5s ease-out 1.5s both;
         }
         
         @keyframes rocketFly {
@@ -261,6 +424,59 @@ export default function EasterEgg({}: EasterEggProps) {
           100% {
             transform: translateX(100px) translateY(-50px) scale(0);
             opacity: 0;
+          }
+        }
+        
+        @keyframes soccerFieldAppear {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes ballKick {
+          0% {
+            left: 50px;
+            transform: translateY(-50%) rotate(0deg) scale(1);
+          }
+          50% {
+            left: 200px;
+            transform: translateY(-70px) rotate(720deg) scale(1.2);
+          }
+          100% {
+            left: 350px;
+            transform: translateY(-50%) rotate(1440deg) scale(0.8);
+          }
+        }
+        
+        @keyframes goalNetShake {
+          0%, 100% {
+            transform: translateY(-50%) translateX(0);
+          }
+          25% {
+            transform: translateY(-50%) translateX(-3px);
+          }
+          75% {
+            transform: translateY(-50%) translateX(3px);
+          }
+        }
+        
+        @keyframes goalTextAppear {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.5);
+          }
+          50% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.2);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
           }
         }
       `}</style>
