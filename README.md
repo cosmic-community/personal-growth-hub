@@ -1,9 +1,9 @@
 <!-- README_START -->
-# Personal Growth Hub
+# TrueYou Therapy
 
 A modern wellness and personal development platform inspired by BetterHelp's design, built with Next.js and powered by [Cosmic](https://www.cosmicjs.com). This application showcases digital products, educational resources, and tools for individual growth, relationship improvement, and youth development.
 
-![Personal Growth Hub Banner](https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop&auto=format,compress)
+![TrueYou Therapy Banner](https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=400&fit=crop&auto=format,compress)
 
 ## ✨ Features
 
@@ -46,7 +46,7 @@ Want to create your own version of this project with all the content and structu
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd personal-growth-hub
+   cd trueyou-therapy
    ```
 
 2. **Install dependencies**

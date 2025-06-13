@@ -12,12 +12,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Personal Growth Hub - Transform Your Life with Professional Resources',
+  title: 'TrueYou Therapy - Transform Your Life with Professional Resources',
   description: 'Access high-quality digital products for personal growth, relationship improvement, and youth development. Professional-grade resources for individual coaching, couples therapy, and teen support.',
   keywords: 'personal growth, self-care, relationship tools, youth resources, digital products, therapy resources',
-  authors: [{ name: 'Personal Growth Hub' }],
-  creator: 'Personal Growth Hub',
-  publisher: 'Personal Growth Hub',
+  authors: [{ name: 'TrueYou Therapy' }],
+  creator: 'TrueYou Therapy',
+  publisher: 'TrueYou Therapy',
   formatDetection: {
     email: false,
     address: false,
@@ -26,16 +26,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://personalgrowth.com',
-    title: 'Personal Growth Hub - Transform Your Life',
+    url: 'https://trueyoutherapy.com',
+    title: 'TrueYou Therapy - Transform Your Life',
     description: 'Professional digital resources for personal development and well-being',
-    siteName: 'Personal Growth Hub',
+    siteName: 'TrueYou Therapy',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Personal Growth Hub',
+    title: 'TrueYou Therapy',
     description: 'Professional digital resources for personal development',
-    creator: '@personalgrowth',
+    creator: '@trueyoutherapy',
   },
   robots: {
     index: true,

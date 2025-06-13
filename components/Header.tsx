@@ -43,7 +43,7 @@ export default function Header() {
               href="/" 
               className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
             >
-              Personal Growth Hub
+              TrueYou Therapy
             </Link>
           </div>
 
