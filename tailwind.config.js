@@ -7,6 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        border: 'hsl(var(--border))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -18,6 +21,8 @@ module.exports = {
           700: '#15803d',
           800: '#166534',
           900: '#14532d',
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
           50: '#f8fafc',
@@ -30,6 +35,8 @@ module.exports = {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         accent: {
           50: '#fef7cd',
@@ -42,6 +49,12 @@ module.exports = {
           700: '#c2410c',
           800: '#9a3412',
           900: '#7c2d12',
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
       },
       fontFamily: {
