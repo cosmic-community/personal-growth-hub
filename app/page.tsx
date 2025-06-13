@@ -5,6 +5,8 @@ import FeaturedProducts from '@/components/FeaturedProducts';
 import ReviewsSection from '@/components/ReviewsSection';
 import BlogSection from '@/components/BlogSection';
 import CTASection from '@/components/CTASection';
+import TrustBadges from '@/components/TrustBadges';
+import FAQ from '@/components/FAQ';
 
 export default async function HomePage() {
   // Fetch all data in parallel for better performance
@@ -18,9 +20,11 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       <Hero categories={categories} />
+      <TrustBadges />
       <CategoryGrid categories={categories} />
       <FeaturedProducts products={featuredProducts} />
       <ReviewsSection reviews={reviews} />
+      <FAQ />
       <BlogSection posts={blogPosts} />
       <CTASection />
     </div>
