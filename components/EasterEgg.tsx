@@ -9,7 +9,7 @@ export default function EasterEgg({}: EasterEggProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [command, setCommand] = useState<string>('');
   const [isRocketFlying, setIsRocketFlying] = useState<boolean>(false);
-  const [showConfetti, setShowConfetti] = useState<boolean>(false);
+  const [showFireworks, setShowFireworks] = useState<boolean>(false);
 
   const handleHeartClick = (): void => {
     setShowModal(true);
@@ -25,7 +25,7 @@ export default function EasterEgg({}: EasterEggProps) {
     } else if (command.toLowerCase().trim() === 'winning') {
       setShowModal(false);
       setCommand('');
-      triggerWinningAnimation();
+      triggerFireworksAnimation();
     } else if (command.toLowerCase().trim() === 'jeff') {
       setShowModal(false);
       setCommand('');
@@ -51,13 +51,13 @@ export default function EasterEgg({}: EasterEggProps) {
     }, 2000);
   };
 
-  const triggerWinningAnimation = (): void => {
-    setShowConfetti(true);
+  const triggerFireworksAnimation = (): void => {
+    setShowFireworks(true);
     
-    // Hide confetti after 5 seconds
+    // Hide fireworks after 4 seconds
     setTimeout(() => {
-      setShowConfetti(false);
-    }, 5000);
+      setShowFireworks(false);
+    }, 4000);
   };
 
   const closeModal = (): void => {
@@ -79,18 +79,39 @@ export default function EasterEgg({}: EasterEggProps) {
     }
   }, [showModal]);
 
-  // Generate confetti pieces
-  const confettiPieces = Array.from({ length: 100 }, (_, i) => (
-    <div
-      key={i}
-      className="confetti-piece"
-      style={{
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 3}s`,
-        backgroundColor: ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'][Math.floor(Math.random() * 6)]
-      }}
-    />
-  ));
+  // Generate firework bursts
+  const createFireworkBurst = (x: number, y: number, color: string, delay: number) => {
+    const particles = [];
+    for (let i = 0; i < 12; i++) {
+      const angle = (i * 360) / 12;
+      particles.push(
+        <div
+          key={`${x}-${y}-${i}`}
+          className="absolute w-2 h-2 rounded-full"
+          style={{
+            left: x + 'px',
+            top: y + 'px',
+            backgroundColor: color,
+            animation: `fireworkParticle 1.5s ease-out ${delay}s forwards`,
+            transform: `rotate(${angle}deg)`,
+            transformOrigin: '1px 1px',
+          }}
+        />
+      );
+    }
+    return particles;
+  };
+
+  const fireworkBursts = showFireworks ? [
+    ...createFireworkBurst(200, 150, '#ff6b6b', 0),
+    ...createFireworkBurst(600, 100, '#4ecdc4', 0.3),
+    ...createFireworkBurst(400, 200, '#45b7d1', 0.6),
+    ...createFireworkBurst(800, 180, '#f9ca24', 0.9),
+    ...createFireworkBurst(300, 120, '#f0932b', 1.2),
+    ...createFireworkBurst(700, 250, '#eb4d4b', 1.5),
+    ...createFireworkBurst(150, 300, '#6c5ce7', 1.8),
+    ...createFireworkBurst(550, 80, '#a29bfe', 2.1),
+  ] : [];
 
   return (
     <>
@@ -182,10 +203,10 @@ export default function EasterEgg({}: EasterEggProps) {
         </div>
       )}
 
-      {/* Confetti Animation */}
-      {showConfetti && (
+      {/* Fireworks Animation */}
+      {showFireworks && (
         <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
-          {confettiPieces}
+          {fireworkBursts}
         </div>
       )}
 
@@ -200,16 +221,6 @@ export default function EasterEgg({}: EasterEggProps) {
         
         .rocket-icon {
           animation: rocketSpin 0.5s linear infinite;
-        }
-        
-        .confetti-piece {
-          position: absolute;
-          width: 12px;
-          height: 12px;
-          top: -10px;
-          animation: confettiFall 4s linear infinite;
-          opacity: 0.9;
-          border-radius: 2px;
         }
         
         @keyframes rocketFly {
@@ -242,13 +253,13 @@ export default function EasterEgg({}: EasterEggProps) {
           }
         }
         
-        @keyframes confettiFall {
+        @keyframes fireworkParticle {
           0% {
-            transform: translateY(-100vh) rotate(0deg);
+            transform: translateX(0) translateY(0) scale(1);
             opacity: 1;
           }
           100% {
-            transform: translateY(100vh) rotate(720deg);
+            transform: translateX(100px) translateY(-50px) scale(0);
             opacity: 0;
           }
         }
