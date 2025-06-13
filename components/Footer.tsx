@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
-import { Heart, Mail, Phone, MapPin } from 'lucide-react';
+import { Heart, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Button } from './ui/Button';
+import { NewsletterSignup } from './NewsletterSignup';
 
 export default function Footer() {
   const footerLinks = {
@@ -23,34 +27,56 @@ export default function Footer() {
     ],
   };
 
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-secondary-900 text-white">
-      <div className="container-width section-padding">
+    <footer className="bg-muted/30 border-t border-border">
+      <div className="container">
+        {/* Newsletter Section */}
+        <div className="py-12 border-b border-border">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="flex items-center justify-center mb-4">
+              <Send className="w-8 h-8 text-primary mr-3" />
+              <h3 className="text-2xl font-bold">Stay Connected</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              Get weekly insights, tips, and resources delivered to your inbox. 
+              Join thousands on their personal growth journey.
+            </p>
+            <NewsletterSignup />
+          </div>
+        </div>
+
+        {/* Main Footer Content */}
         <div className="py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {/* Brand */}
-            <div className="lg:col-span-1">
-              <Link href="/" className="text-2xl font-bold text-white mb-4 block">
+            <div className="lg:col-span-2">
+              <Link 
+                href="/" 
+                className="text-2xl font-bold gradient-text mb-4 block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+              >
                 Personal Growth Hub
               </Link>
-              <p className="text-secondary-300 mb-4">
-                Professional digital resources for personal development, relationship improvement, and youth growth.
+              <p className="text-muted-foreground mb-6 max-w-md">
+                Professional digital resources for personal development, relationship improvement, 
+                and youth growth. Trusted by professionals and individuals worldwide.
               </p>
-              <div className="flex items-center text-secondary-300 text-sm">
-                <Heart size={16} className="mr-2 text-primary-400" />
+              <div className="flex items-center text-muted-foreground text-sm">
+                <Heart size={16} className="mr-2 text-primary" aria-hidden="true" />
                 Trusted by thousands worldwide
               </div>
             </div>
 
             {/* Products */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Products</h3>
+              <h4 className="font-semibold mb-4 text-foreground">Products</h4>
               <ul className="space-y-2">
                 {footerLinks.products.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-secondary-300 hover:text-white transition-colors"
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                     >
                       {link.name}
                     </Link>
@@ -61,13 +87,13 @@ export default function Footer() {
 
             {/* Support */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Support</h3>
+              <h4 className="font-semibold mb-4 text-foreground">Support</h4>
               <ul className="space-y-2">
                 {footerLinks.support.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-secondary-300 hover:text-white transition-colors"
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                     >
                       {link.name}
                     </Link>
@@ -78,13 +104,13 @@ export default function Footer() {
 
             {/* Company */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Company</h3>
+              <h4 className="font-semibold mb-4 text-foreground">Company</h4>
               <ul className="space-y-2">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-secondary-300 hover:text-white transition-colors"
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                     >
                       {link.name}
                     </Link>
@@ -95,29 +121,39 @@ export default function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div className="border-t border-secondary-700 mt-8 pt-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-secondary-300 text-sm">
+          <div className="border-t border-border mt-8 pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground text-sm">
               <div className="flex items-center">
-                <Mail size={16} className="mr-2" />
-                contact@personalgrowth.com
+                <Mail size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <a 
+                  href="mailto:contact@personalgrowth.com"
+                  className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                >
+                  contact@personalgrowth.com
+                </a>
               </div>
               <div className="flex items-center">
-                <Phone size={16} className="mr-2" />
-                1-800-GROWTH (476-9848)
+                <Phone size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <a 
+                  href="tel:1-800-476-9848"
+                  className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                >
+                  1-800-GROWTH (476-9848)
+                </a>
               </div>
               <div className="flex items-center">
-                <MapPin size={16} className="mr-2" />
-                Available worldwide
+                <MapPin size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <span>Available worldwide</span>
               </div>
             </div>
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-secondary-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-secondary-400 text-sm">
-              © {new Date().getFullYear()} Personal Growth Hub. All rights reserved.
+          <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+            <p>
+              © {currentYear} Personal Growth Hub. All rights reserved.
             </p>
-            <p className="text-secondary-400 text-sm mt-4 md:mt-0">
+            <p className="mt-4 md:mt-0">
               Made with ❤️ for your personal growth journey
             </p>
           </div>

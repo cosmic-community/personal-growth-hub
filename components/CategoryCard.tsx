@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { ProductCategory } from '@/types';
@@ -7,14 +10,19 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category }: CategoryCardProps) {
-  const backgroundColor = category.metadata?.background_color || '#4a5568';
+  const backgroundColor = category.metadata?.background_color || '#475569';
   const iconUrl = category.metadata?.icon?.imgix_url;
   const subtitle = category.metadata?.subtitle || '';
 
   return (
-    <Link href={`/categories/${category.slug}`}>
-      <div 
-        className="category-card h-96 relative group"
+    <motion.div
+      whileHover={{ scale: 1.02, y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Link 
+        href={`/categories/${category.slug}`}
+        className="block h-96 rounded-2xl overflow-hidden relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         style={{ backgroundColor }}
       >
         {/* Background Image */}
@@ -23,34 +31,55 @@ export default function CategoryCard({ category }: CategoryCardProps) {
             <img
               src={`${iconUrl}?w=600&h=800&fit=crop&auto=format,compress`}
               alt={category.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              loading="lazy"
             />
-            <div className="gradient-overlay"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/40 to-black/70"></div>
           </div>
         )}
 
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col justify-between">
+        <div className="relative z-10 h-full flex flex-col justify-between p-8 text-white">
           <div className="flex-1 flex flex-col justify-center">
-            <h3 className="text-3xl font-bold mb-2">
+            <motion.h3 
+              className="text-3xl font-bold mb-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
               {category.title}
-            </h3>
-            <p className="text-lg opacity-90 mb-4">
+            </motion.h3>
+            <motion.p 
+              className="text-lg opacity-90 mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               {subtitle}
-            </p>
+            </motion.p>
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm opacity-75">
-              {category.metadata?.description?.substring(0, 50)}...
+          <motion.div 
+            className="flex items-center justify-between"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <span className="text-sm opacity-75 line-clamp-2 max-w-[200px]">
+              {category.metadata?.description}
             </span>
-            <ArrowRight 
-              size={24} 
-              className="transition-transform group-hover:translate-x-1" 
-            />
-          </div>
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm group-hover:bg-white/30 transition-colors">
+              <ArrowRight 
+                size={20} 
+                className="transition-transform group-hover:translate-x-1" 
+              />
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </Link>
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </Link>
+    </motion.div>
   );
 }
