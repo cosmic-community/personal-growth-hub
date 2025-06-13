@@ -17,8 +17,9 @@ export default function MatrixEasterEgg({ isActive, onDeactivate }: { isActive: 
   const [columns, setColumns] = useState<MatrixColumn[]>([]);
   const [showWelcome, setShowWelcome] = useState(false);
 
-  const getRandomChar = useCallback(() => {
-    return MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+  const getRandomChar = useCallback((): string => {
+    const index = Math.floor(Math.random() * MATRIX_CHARS.length);
+    return MATRIX_CHARS[index] || MATRIX_CHARS[0];
   }, []);
 
   const createColumn = useCallback((id: number, x: number): MatrixColumn => {
