@@ -87,7 +87,7 @@ export default function Header(): JSX.Element {
                 {item.hasDropdown ? (
                   <>
                     <button
-                      className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring h-auto"
+                      className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       aria-expanded={isProductsOpen}
                       aria-haspopup="true"
                     >
