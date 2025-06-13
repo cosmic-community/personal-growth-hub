@@ -33,7 +33,7 @@ export default function Hero({ categories }: HeroProps) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-background to-primary/5"></div>
       
       {/* Floating Elements with new accent colors */}
       <div className="absolute top-20 right-10 w-20 h-20 bg-teal-600/20 rounded-full blur-xl animate-float"></div>
