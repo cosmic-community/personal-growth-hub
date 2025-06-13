@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
+import { AuthService } from '@/lib/auth';
 
 interface Quote {
   text: string;
@@ -74,6 +75,7 @@ export default function LoginPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
@@ -82,6 +84,14 @@ export default function LoginPage(): JSX.Element {
 
   useEffect(() => {
     setCurrentQuote(getRandomQuote());
+    
+    // Load stored credentials if they exist
+    const storedCredentials = AuthService.getStoredCredentials();
+    if (storedCredentials) {
+      setEmail(storedCredentials.email);
+      setPassword(storedCredentials.password);
+      setRememberMe(true);
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -101,7 +111,7 @@ export default function LoginPage(): JSX.Element {
     setErrors({});
 
     try {
-      await login(email, password);
+      await login(email, password, rememberMe);
       router.push('/profile');
     } catch (error) {
       setErrors({
@@ -215,6 +225,8 @@ export default function LoginPage(): JSX.Element {
                   <input
                     id="remember-me"
                     type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-border rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground">
