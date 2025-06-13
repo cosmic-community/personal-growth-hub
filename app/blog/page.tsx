@@ -24,7 +24,10 @@ export default async function BlogPage() {
       title: '5 Simple Mindfulness Techniques for Busy Professionals',
       slug: '5-mindfulness-techniques-busy-professionals',
       created_at: '2024-01-15T10:00:00Z',
+      modified_at: '2024-01-15T10:00:00Z',
       metadata: {
+        title: '5 Simple Mindfulness Techniques for Busy Professionals',
+        content: 'Discover practical mindfulness techniques that fit into your busy schedule and help reduce stress throughout your workday.',
         excerpt: 'Discover practical mindfulness techniques that fit into your busy schedule and help reduce stress throughout your workday.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
@@ -39,7 +42,10 @@ export default async function BlogPage() {
       title: 'The Science of Habit Formation: How to Build Lasting Change',
       slug: 'science-habit-formation-lasting-change',
       created_at: '2024-01-12T14:30:00Z',
+      modified_at: '2024-01-12T14:30:00Z',
       metadata: {
+        title: 'The Science of Habit Formation: How to Build Lasting Change',
+        content: 'Learn the psychological principles behind habit formation and discover evidence-based strategies for creating positive changes that stick.',
         excerpt: 'Learn the psychological principles behind habit formation and discover evidence-based strategies for creating positive changes that stick.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b',
@@ -54,7 +60,10 @@ export default async function BlogPage() {
       title: 'Overcoming Imposter Syndrome: A Therapist\'s Guide',
       slug: 'overcoming-imposter-syndrome-therapist-guide',
       created_at: '2024-01-10T09:15:00Z',
+      modified_at: '2024-01-10T09:15:00Z',
       metadata: {
+        title: 'Overcoming Imposter Syndrome: A Therapist\'s Guide',
+        content: 'Understanding imposter syndrome and practical strategies to build genuine confidence and self-worth in your personal and professional life.',
         excerpt: 'Understanding imposter syndrome and practical strategies to build genuine confidence and self-worth in your personal and professional life.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285',
@@ -69,7 +78,10 @@ export default async function BlogPage() {
       title: 'The Art of Setting Boundaries: Protecting Your Mental Health',
       slug: 'art-setting-boundaries-mental-health',
       created_at: '2024-01-08T16:45:00Z',
+      modified_at: '2024-01-08T16:45:00Z',
       metadata: {
+        title: 'The Art of Setting Boundaries: Protecting Your Mental Health',
+        content: 'Learn how to set healthy boundaries in relationships and work to protect your mental health and improve your quality of life.',
         excerpt: 'Learn how to set healthy boundaries in relationships and work to protect your mental health and improve your quality of life.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac',
@@ -84,7 +96,10 @@ export default async function BlogPage() {
       title: 'Managing Anxiety in Uncertain Times: Evidence-Based Strategies',
       slug: 'managing-anxiety-uncertain-times-strategies',
       created_at: '2024-01-05T11:20:00Z',
+      modified_at: '2024-01-05T11:20:00Z',
       metadata: {
+        title: 'Managing Anxiety in Uncertain Times: Evidence-Based Strategies',
+        content: 'Practical, research-backed techniques for managing anxiety and building resilience during challenging and uncertain periods.',
         excerpt: 'Practical, research-backed techniques for managing anxiety and building resilience during challenging and uncertain periods.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1',
@@ -99,7 +114,10 @@ export default async function BlogPage() {
       title: 'The Power of Gratitude: More Than Just Positive Thinking',
       slug: 'power-gratitude-positive-thinking',
       created_at: '2024-01-03T13:10:00Z',
+      modified_at: '2024-01-03T13:10:00Z',
       metadata: {
+        title: 'The Power of Gratitude: More Than Just Positive Thinking',
+        content: 'Explore the scientific benefits of gratitude practice and learn practical ways to incorporate thankfulness into your daily routine.',
         excerpt: 'Explore the scientific benefits of gratitude practice and learn practical ways to incorporate thankfulness into your daily routine.',
         featured_image: {
           imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',

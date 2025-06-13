@@ -22,6 +22,10 @@ interface ProductCategory extends CosmicObject {
       url: string;
       imgix_url: string;
     };
+    image?: {
+      url: string;
+      imgix_url: string;
+    };
   };
 }
 
@@ -63,6 +67,7 @@ interface BlogPost extends CosmicObject {
     };
     author?: string;
     publish_date?: string;
+    read_time?: number;
   };
 }
 

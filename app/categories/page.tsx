@@ -24,7 +24,9 @@ export default async function CategoriesPage() {
       title: 'Mindfulness & Meditation',
       slug: 'mindfulness-meditation',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Mindfulness & Meditation',
         description: 'Discover inner peace and reduce stress with our comprehensive mindfulness and meditation resources.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
@@ -37,7 +39,9 @@ export default async function CategoriesPage() {
       title: 'Relationships & Communication',
       slug: 'relationships-communication',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Relationships & Communication',
         description: 'Build stronger, healthier relationships with proven communication techniques and relationship tools.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac',
@@ -50,7 +54,9 @@ export default async function CategoriesPage() {
       title: 'Career & Professional Growth',
       slug: 'career-professional-growth',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Career & Professional Growth',
         description: 'Advance your career and develop professional skills with our expert-designed resources.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
@@ -63,7 +69,9 @@ export default async function CategoriesPage() {
       title: 'Anxiety & Stress Management',
       slug: 'anxiety-stress-management',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Anxiety & Stress Management',
         description: 'Learn effective techniques to manage anxiety and stress, and build resilience for life challenges.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1',
@@ -76,7 +84,9 @@ export default async function CategoriesPage() {
       title: 'Self-Confidence & Self-Esteem',
       slug: 'self-confidence-esteem',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Self-Confidence & Self-Esteem',
         description: 'Build unshakeable confidence and develop a positive self-image with our empowering resources.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285',
@@ -89,7 +99,9 @@ export default async function CategoriesPage() {
       title: 'Goal Setting & Achievement',
       slug: 'goal-setting-achievement',
       created_at: '2024-01-01T00:00:00Z',
+      modified_at: '2024-01-01T00:00:00Z',
       metadata: {
+        name: 'Goal Setting & Achievement',
         description: 'Turn your dreams into reality with proven goal-setting strategies and achievement frameworks.',
         image: {
           imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b',
