@@ -175,7 +175,11 @@ export default function LoginPage(): JSX.Element {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (errors.email) setErrors({ ...errors, email: '' });
+                    if (errors.email) {
+                      const newErrors = { ...errors };
+                      delete newErrors.email;
+                      setErrors(newErrors);
+                    }
                   }}
                   className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
                     errors.email ? 'border-red-500' : 'border-border'
@@ -199,7 +203,11 @@ export default function LoginPage(): JSX.Element {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      if (errors.password) setErrors({ ...errors, password: '' });
+                      if (errors.password) {
+                        const newErrors = { ...errors };
+                        delete newErrors.password;
+                        setErrors(newErrors);
+                      }
                     }}
                     className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
                       errors.password ? 'border-red-500' : 'border-border'
