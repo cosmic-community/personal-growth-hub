@@ -5,6 +5,7 @@ import type { ProductCategory } from '@/types';
 import CategoryCard from './CategoryCard';
 import { Button } from './ui/Button';
 import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface HeroProps {
   categories: ProductCategory[];
@@ -70,9 +71,11 @@ export default function Hero({ categories }: HeroProps) {
             variants={fadeInUp}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
           >
-            <Button size="lg" className="text-lg px-8 py-4">
-              Start Your Journey
-            </Button>
+            <Link href="/signup">
+              <Button size="lg" className="text-lg px-8 py-4">
+                Get Started
+              </Button>
+            </Link>
             <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
               Learn More
             </Button>

@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
 
 interface Quote {
   text: string;
@@ -53,13 +56,11 @@ const inspirationalQuotes: Quote[] = [
   }
 ];
 
-// Default quote as fallback
 const defaultQuote: Quote = {
   text: "Every journey begins with a single step.",
   author: "Unknown"
 };
 
-// Helper function to get a random quote with guaranteed return value
 function getRandomQuote(): Quote {
   if (inspirationalQuotes.length === 0) {
     return defaultQuote;
@@ -73,23 +74,48 @@ export default function LoginPage(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  const router = useRouter();
+  const { login } = useAuth();
 
   useEffect(() => {
-    // Select a random quote on component mount (page refresh)
     setCurrentQuote(getRandomQuote());
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', { email, password });
+    
+    if (!email.trim()) {
+      setErrors({ email: 'Email is required' });
+      return;
+    }
+    
+    if (!password) {
+      setErrors({ password: 'Password is required' });
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      await login(email, password);
+      router.push('/profile');
+    } catch (error) {
+      setErrors({
+        submit: error instanceof Error ? error.message : 'Invalid email or password'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex">
       {/* Left side - Quote and Image */}
       <div className="hidden lg:flex lg:flex-1 relative bg-gradient-to-br from-teal-600 to-amber-600 overflow-hidden">
-        {/* Background Image */}
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1200&fit=crop&auto=format,compress"
@@ -98,10 +124,8 @@ export default function LoginPage(): JSX.Element {
           />
         </div>
         
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-teal-600/80 to-amber-600/80" />
         
-        {/* Quote Content */}
         <div className="relative z-10 flex flex-col justify-center items-center p-12 text-white">
           <div className="max-w-md text-center">
             <blockquote className="text-2xl font-light leading-relaxed mb-6">
@@ -112,7 +136,6 @@ export default function LoginPage(): JSX.Element {
             </cite>
           </div>
           
-          {/* Decorative elements */}
           <div className="absolute top-8 left-8 w-24 h-24 rounded-full bg-white/10 animate-pulse" />
           <div className="absolute bottom-12 right-12 w-16 h-16 rounded-full bg-white/5 animate-pulse delay-1000" />
           <div className="absolute top-1/3 right-8 w-8 h-8 rounded-full bg-white/20 animate-pulse delay-500" />
@@ -122,7 +145,6 @@ export default function LoginPage(): JSX.Element {
       {/* Right side - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
-          {/* Header */}
           <div className="text-center">
             <h1 className="text-3xl font-bold gradient-text">Welcome Back</h1>
             <p className="mt-2 text-muted-foreground">
@@ -130,7 +152,6 @@ export default function LoginPage(): JSX.Element {
             </p>
           </div>
 
-          {/* Login Form */}
           <Card className="p-8 shadow-lg">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
@@ -142,11 +163,18 @@ export default function LoginPage(): JSX.Element {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
+                  }}
+                  className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
+                    errors.email ? 'border-red-500' : 'border-border'
+                  }`}
                   placeholder="Enter your email"
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
               </div>
 
               {/* Password Field */}
@@ -159,9 +187,13 @@ export default function LoginPage(): JSX.Element {
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 pr-10 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errors.password) setErrors(prev => ({ ...prev, password: '' }));
+                    }}
+                    className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
+                      errors.password ? 'border-red-500' : 'border-border'
+                    }`}
                     placeholder="Enter your password"
                   />
                   <button
@@ -172,6 +204,9 @@ export default function LoginPage(): JSX.Element {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
               </div>
 
               {/* Remember Me and Forgot Password */}
@@ -199,9 +234,14 @@ export default function LoginPage(): JSX.Element {
                 type="submit"
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white"
                 size="lg"
+                disabled={isLoading}
               >
-                Sign In
+                {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
+
+              {errors.submit && (
+                <p className="text-sm text-red-600 text-center">{errors.submit}</p>
+              )}
             </form>
 
             {/* Divider */}
@@ -249,9 +289,9 @@ export default function LoginPage(): JSX.Element {
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <a href="#" className="font-medium text-teal-600 hover:text-teal-500">
+                <Link href="/signup" className="font-medium text-teal-600 hover:text-teal-500">
                   Sign up for free
-                </a>
+                </Link>
               </p>
             </div>
           </Card>
