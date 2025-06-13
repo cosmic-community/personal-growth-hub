@@ -33,7 +33,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       whileHover={{ y: -4 }}
       className="group h-full"
     >
-      <Card className="h-full flex flex-col overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300">
+      <Card className="h-full flex flex-col overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 hover:shadow-teal-600/10">
         {/* Image */}
         <div className="relative overflow-hidden">
           {imageUrl ? (
@@ -50,7 +50,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           )}
           
           {hasDiscount && (
-            <div className="absolute top-3 left-3 bg-destructive text-destructive-foreground px-2 py-1 rounded-md text-xs font-medium">
+            <div className="absolute top-3 left-3 bg-amber-600 text-white px-2 py-1 rounded-md text-xs font-medium">
               {discountPercentage}% OFF
             </div>
           )}
@@ -59,7 +59,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         {/* Content */}
         <div className="p-6 flex-1 flex flex-col">
           {categoryName && (
-            <span className="text-xs text-primary font-medium uppercase tracking-wide mb-2">
+            <span className="text-xs text-teal-600 font-medium uppercase tracking-wide mb-2">
               {categoryName}
             </span>
           )}
@@ -75,11 +75,11 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           {/* Meta info */}
           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
-              <Clock size={12} />
+              <Clock size={12} className="text-teal-600" />
               <span>Instant Access</span>
             </div>
             <div className="flex items-center gap-1">
-              <Users size={12} />
+              <Users size={12} className="text-amber-600" />
               <span>1000+ Users</span>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               )}
             </div>
             
-            <Button asChild variant="default" size="sm">
+            <Button asChild variant="default" size="sm" className="bg-teal-600 hover:bg-teal-600/90">
               <Link href={`/products/${product.slug}`}>
                 Learn More
               </Link>

@@ -31,7 +31,7 @@ export default function Header() {
     <header 
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled 
-          ? 'glass-effect shadow-sm' 
+          ? 'glass-effect shadow-sm border-b border-teal-600/10' 
           : 'bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'
       }`}
     >
@@ -63,16 +63,16 @@ export default function Header() {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" aria-label="User account">
+            <Button variant="ghost" size="sm" aria-label="User account" className="hover:bg-teal-600/10">
               <User size={18} />
             </Button>
-            <Button variant="ghost" size="sm" aria-label="Shopping cart">
+            <Button variant="ghost" size="sm" aria-label="Shopping cart" className="hover:bg-amber-600/10">
               <ShoppingBag size={18} />
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
               Login
             </Button>
-            <Button size="sm">
+            <Button size="sm" variant="amber">
               Get Started
             </Button>
           </div>
@@ -107,10 +107,10 @@ export default function Header() {
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="outline" className="justify-start">
+                <Button variant="teal" className="justify-start">
                   Login
                 </Button>
-                <Button className="justify-start">
+                <Button variant="amber" className="justify-start">
                   Get Started
                 </Button>
               </div>

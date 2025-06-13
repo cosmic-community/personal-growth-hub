@@ -35,10 +35,11 @@ export default function Hero({ categories }: HeroProps) {
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10"></div>
       
-      {/* Floating Elements */}
-      <div className="absolute top-20 right-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-float"></div>
-      <div className="absolute bottom-20 left-10 w-16 h-16 bg-primary/30 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+      {/* Floating Elements with new accent colors */}
+      <div className="absolute top-20 right-10 w-20 h-20 bg-teal-600/20 rounded-full blur-xl animate-float"></div>
+      <div className="absolute bottom-20 left-10 w-16 h-16 bg-amber-600/30 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
       <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-primary/10 rounded-full blur-lg animate-pulse-soft"></div>
+      <div className="absolute top-1/3 right-1/4 w-14 h-14 bg-teal-600/15 rounded-full blur-lg animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
       
       <div className="container relative z-10 section-padding">
         <motion.div 
@@ -72,7 +73,7 @@ export default function Hero({ categories }: HeroProps) {
             <Button size="lg" className="text-lg px-8 py-4">
               Start Your Journey
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+            <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
               Learn More
             </Button>
           </motion.div>
@@ -109,9 +110,12 @@ export default function Hero({ categories }: HeroProps) {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-muted-foreground">
-            {trustIndicators.map((indicator) => (
+            {trustIndicators.map((indicator, index) => (
               <div key={indicator} className="flex items-center gap-2">
-                <CheckCircle size={16} className="text-primary flex-shrink-0" />
+                <CheckCircle size={16} className={`flex-shrink-0 ${
+                  index === 0 ? 'text-teal-600' : 
+                  index === 1 ? 'text-amber-600' : 'text-primary'
+                }`} />
                 <span className="text-sm">{indicator}</span>
               </div>
             ))}

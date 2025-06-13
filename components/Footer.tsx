@@ -36,7 +36,7 @@ export default function Footer() {
         <div className="py-12 border-b border-border">
           <div className="max-w-2xl mx-auto text-center">
             <div className="flex items-center justify-center mb-4">
-              <Send className="w-8 h-8 text-primary mr-3" />
+              <Send className="w-8 h-8 text-teal-600 mr-3" />
               <h3 className="text-2xl font-bold">Stay Connected</h3>
             </div>
             <p className="text-muted-foreground mb-6">
@@ -63,20 +63,23 @@ export default function Footer() {
                 and youth growth. Trusted by professionals and individuals worldwide.
               </p>
               <div className="flex items-center text-muted-foreground text-sm">
-                <Heart size={16} className="mr-2 text-primary" aria-hidden="true" />
+                <Heart size={16} className="mr-2 text-amber-600" aria-hidden="true" />
                 Trusted by thousands worldwide
               </div>
             </div>
 
             {/* Products */}
             <div>
-              <h4 className="font-semibold mb-4 text-foreground">Products</h4>
+              <h4 className="font-semibold mb-4 text-foreground flex items-center">
+                <span className="w-1 h-6 bg-teal-600 mr-2 rounded"></span>
+                Products
+              </h4>
               <ul className="space-y-2">
                 {footerLinks.products.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                      className="text-muted-foreground hover:text-teal-600 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                     >
                       {link.name}
                     </Link>
@@ -87,13 +90,16 @@ export default function Footer() {
 
             {/* Support */}
             <div>
-              <h4 className="font-semibold mb-4 text-foreground">Support</h4>
+              <h4 className="font-semibold mb-4 text-foreground flex items-center">
+                <span className="w-1 h-6 bg-amber-600 mr-2 rounded"></span>
+                Support
+              </h4>
               <ul className="space-y-2">
                 {footerLinks.support.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                      className="text-muted-foreground hover:text-amber-600 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                     >
                       {link.name}
                     </Link>
@@ -124,7 +130,7 @@ export default function Footer() {
           <div className="border-t border-border mt-8 pt-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-muted-foreground text-sm">
               <div className="flex items-center">
-                <Mail size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <Mail size={16} className="mr-2 flex-shrink-0 text-teal-600" aria-hidden="true" />
                 <a 
                   href="mailto:contact@personalgrowth.com"
                   className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -133,7 +139,7 @@ export default function Footer() {
                 </a>
               </div>
               <div className="flex items-center">
-                <Phone size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <Phone size={16} className="mr-2 flex-shrink-0 text-amber-600" aria-hidden="true" />
                 <a 
                   href="tel:1-800-476-9848"
                   className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -142,7 +148,7 @@ export default function Footer() {
                 </a>
               </div>
               <div className="flex items-center">
-                <MapPin size={16} className="mr-2 flex-shrink-0" aria-hidden="true" />
+                <MapPin size={16} className="mr-2 flex-shrink-0 text-primary" aria-hidden="true" />
                 <span>Available worldwide</span>
               </div>
             </div>
@@ -153,9 +159,11 @@ export default function Footer() {
             <p>
               © {currentYear} Personal Growth Hub. All rights reserved.
             </p>
-            <p className="mt-4 md:mt-0">
-              Made with ❤️ for your personal growth journey
-            </p>
+            <div className="mt-4 md:mt-0 flex items-center">
+              <span>Made with</span>
+              <Heart size={16} className="mx-1 text-amber-600" aria-hidden="true" />
+              <span>for your personal growth journey</span>
+            </div>
           </div>
         </div>
       </div>

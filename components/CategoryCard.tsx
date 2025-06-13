@@ -68,7 +68,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
             <span className="text-sm opacity-75 line-clamp-2 max-w-[200px]">
               {category.metadata?.description}
             </span>
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm group-hover:bg-white/30 transition-colors">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm group-hover:bg-amber-600/80 transition-colors">
               <ArrowRight 
                 size={20} 
                 className="transition-transform group-hover:translate-x-1" 
@@ -77,8 +77,8 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           </motion.div>
         </div>
 
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        {/* Hover overlay with accent color */}
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-amber-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </Link>
     </motion.div>
   );
