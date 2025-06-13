@@ -1,9 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X, Rocket, Heart } from 'lucide-react';
 
 interface EasterEggProps {}
+
+interface PongGame {
+  canvas: HTMLCanvasElement | null;
+  context: CanvasRenderingContext2D | null;
+  ballX: number;
+  ballY: number;
+  ballSpeedX: number;
+  ballSpeedY: number;
+  playerY: number;
+  computerY: number;
+  playerScore: number;
+  computerScore: number;
+  gameRunning: boolean;
+  paddleHeight: number;
+  paddleWidth: number;
+  ballSize: number;
+}
 
 export default function EasterEgg({}: EasterEggProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -11,6 +28,27 @@ export default function EasterEgg({}: EasterEggProps) {
   const [isRocketFlying, setIsRocketFlying] = useState<boolean>(false);
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [showSoccerGoal, setShowSoccerGoal] = useState<boolean>(false);
+  const [showPongGame, setShowPongGame] = useState<boolean>(false);
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameRef = useRef<PongGame>({
+    canvas: null,
+    context: null,
+    ballX: 400,
+    ballY: 200,
+    ballSpeedX: 5,
+    ballSpeedY: 3,
+    playerY: 150,
+    computerY: 150,
+    playerScore: 0,
+    computerScore: 0,
+    gameRunning: false,
+    paddleHeight: 100,
+    paddleWidth: 10,
+    ballSize: 10
+  });
+  const animationFrameRef = useRef<number | null>(null);
+  const keysRef = useRef<{[key: string]: boolean}>({});
 
   const handleHeartClick = (): void => {
     setShowModal(true);
@@ -35,6 +73,10 @@ export default function EasterEgg({}: EasterEggProps) {
       setShowModal(false);
       setCommand('');
       triggerSoccerGoalAnimation();
+    } else if (command.toLowerCase().trim() === 'pong') {
+      setShowModal(false);
+      setCommand('');
+      triggerPongGame();
     } else {
       // For future commands, we can add more conditions here
       setCommand('');
@@ -74,24 +116,230 @@ export default function EasterEgg({}: EasterEggProps) {
     }, 3000);
   };
 
+  const triggerPongGame = (): void => {
+    setShowPongGame(true);
+  };
+
+  const closePongGame = (): void => {
+    setShowPongGame(false);
+    gameRef.current.gameRunning = false;
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    // Reset game state
+    gameRef.current.ballX = 400;
+    gameRef.current.ballY = 200;
+    gameRef.current.ballSpeedX = 5;
+    gameRef.current.ballSpeedY = 3;
+    gameRef.current.playerY = 150;
+    gameRef.current.computerY = 150;
+    gameRef.current.playerScore = 0;
+    gameRef.current.computerScore = 0;
+  };
+
   const closeModal = (): void => {
     setShowModal(false);
     setCommand('');
   };
 
+  // Initialize Pong game
+  const initPongGame = useCallback((): void => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    gameRef.current.canvas = canvas;
+    gameRef.current.context = context;
+    gameRef.current.gameRunning = true;
+
+    // Set canvas size
+    canvas.width = 800;
+    canvas.height = 400;
+
+    gameLoop();
+  }, []);
+
+  // Game loop
+  const gameLoop = useCallback((): void => {
+    if (!gameRef.current.gameRunning || !gameRef.current.context || !gameRef.current.canvas) return;
+
+    const game = gameRef.current;
+    const ctx = game.context;
+    const canvas = game.canvas;
+
+    // Clear canvas
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Update player paddle
+    if (keysRef.current['ArrowUp'] && game.playerY > 0) {
+      game.playerY -= 8;
+    }
+    if (keysRef.current['ArrowDown'] && game.playerY < canvas.height - game.paddleHeight) {
+      game.playerY += 8;
+    }
+
+    // Update computer paddle (AI)
+    const computerCenter = game.computerY + game.paddleHeight / 2;
+    const ballCenter = game.ballY;
+    
+    if (computerCenter < ballCenter - 35) {
+      game.computerY += 6;
+    } else if (computerCenter > ballCenter + 35) {
+      game.computerY -= 6;
+    }
+
+    // Keep computer paddle in bounds
+    if (game.computerY < 0) game.computerY = 0;
+    if (game.computerY > canvas.height - game.paddleHeight) {
+      game.computerY = canvas.height - game.paddleHeight;
+    }
+
+    // Update ball position
+    game.ballX += game.ballSpeedX;
+    game.ballY += game.ballSpeedY;
+
+    // Ball collision with top and bottom walls
+    if (game.ballY <= 0 || game.ballY >= canvas.height - game.ballSize) {
+      game.ballSpeedY = -game.ballSpeedY;
+    }
+
+    // Ball collision with player paddle
+    if (
+      game.ballX <= game.paddleWidth + game.ballSize &&
+      game.ballY >= game.playerY &&
+      game.ballY <= game.playerY + game.paddleHeight
+    ) {
+      game.ballSpeedX = -game.ballSpeedX;
+      const deltaY = game.ballY - (game.playerY + game.paddleHeight / 2);
+      game.ballSpeedY = deltaY * 0.1;
+    }
+
+    // Ball collision with computer paddle
+    if (
+      game.ballX >= canvas.width - game.paddleWidth - game.ballSize &&
+      game.ballY >= game.computerY &&
+      game.ballY <= game.computerY + game.paddleHeight
+    ) {
+      game.ballSpeedX = -game.ballSpeedX;
+      const deltaY = game.ballY - (game.computerY + game.paddleHeight / 2);
+      game.ballSpeedY = deltaY * 0.1;
+    }
+
+    // Ball goes off screen (scoring)
+    if (game.ballX < 0) {
+      game.computerScore++;
+      resetBall();
+    } else if (game.ballX > canvas.width) {
+      game.playerScore++;
+      resetBall();
+    }
+
+    // Draw everything
+    drawGame();
+
+    // Continue game loop
+    animationFrameRef.current = requestAnimationFrame(gameLoop);
+  }, []);
+
+  const resetBall = (): void => {
+    const game = gameRef.current;
+    game.ballX = 400;
+    game.ballY = 200;
+    game.ballSpeedX = game.ballSpeedX > 0 ? -5 : 5;
+    game.ballSpeedY = (Math.random() - 0.5) * 6;
+  };
+
+  const drawGame = (): void => {
+    const game = gameRef.current;
+    const ctx = game.context;
+    const canvas = game.canvas;
+    
+    if (!ctx || !canvas) return;
+
+    // Draw center line
+    ctx.setLineDash([5, 15]);
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw paddles
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, game.playerY, game.paddleWidth, game.paddleHeight);
+    ctx.fillRect(canvas.width - game.paddleWidth, game.computerY, game.paddleWidth, game.paddleHeight);
+
+    // Draw ball
+    ctx.fillRect(game.ballX, game.ballY, game.ballSize, game.ballSize);
+
+    // Draw scores
+    ctx.font = '36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(game.playerScore.toString(), canvas.width / 4, 50);
+    ctx.fillText(game.computerScore.toString(), (canvas.width / 4) * 3, 50);
+
+    // Draw instructions
+    ctx.font = '16px Arial';
+    ctx.fillText('Use ↑↓ arrow keys to move', canvas.width / 2, canvas.height - 20);
+  };
+
+  // Keyboard event handlers
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      keysRef.current[e.key] = true;
+    };
+
+    const handleKeyUp = (e: KeyboardEvent): void => {
+      keysRef.current[e.key] = false;
+    };
+
+    if (showPongGame) {
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keyup', handleKeyUp);
+      };
+    }
+  }, [showPongGame]);
+
+  // Initialize game when Pong modal opens
+  useEffect(() => {
+    if (showPongGame) {
+      setTimeout(() => {
+        initPongGame();
+      }, 100);
+    }
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [showPongGame, initPongGame]);
+
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
-        closeModal();
+        if (showPongGame) {
+          closePongGame();
+        } else {
+          closeModal();
+        }
       }
     };
 
-    if (showModal) {
+    if (showModal || showPongGame) {
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
     }
-  }, [showModal]);
+  }, [showModal, showPongGame]);
 
   // Generate firework bursts
   const createFireworkBurst = (x: number, y: number, color: string, delay: number) => {
@@ -195,7 +443,41 @@ export default function EasterEgg({}: EasterEggProps) {
             
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride!
+                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride, "goal" for a soccer animation, or "pong" for a retro game!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pong Game Modal */}
+      {showPongGame && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 backdrop-blur-sm">
+          <div className="bg-gray-900 rounded-lg shadow-2xl border border-gray-700 p-6 w-full max-w-4xl mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold text-white">
+                🏓 Cosmic Pong
+              </h3>
+              <button
+                onClick={closePongGame}
+                className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+                aria-label="Close Pong game"
+              >
+                <X size={24} className="text-gray-400" />
+              </button>
+            </div>
+            
+            <div className="flex justify-center">
+              <canvas
+                ref={canvasRef}
+                className="border-2 border-gray-600 rounded-lg"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-gray-400 text-sm">
+                Use ↑↓ arrow keys to control your paddle. First to 10 points wins!
               </p>
             </div>
           </div>
