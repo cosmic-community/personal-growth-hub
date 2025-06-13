@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Menu, X, User, ShoppingBag, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
+import { useAuth } from './AuthProvider';
 
 interface NavigationItem {
   name: string;
@@ -20,6 +21,7 @@ export default function Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isProductsOpen, setIsProductsOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = (): void => {
@@ -53,6 +55,11 @@ export default function Header(): JSX.Element {
 
   const handleProductsMouseLeave = (): void => {
     setIsProductsOpen(false);
+  };
+
+  const handleLogout = (): void => {
+    logout();
+    setIsMenuOpen(false);
   };
 
   return (
@@ -131,20 +138,40 @@ export default function Header(): JSX.Element {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" aria-label="User account" className="hover:bg-teal-600/10">
-              <User size={18} />
-            </Button>
             <Button variant="ghost" size="sm" aria-label="Shopping cart" className="hover:bg-amber-600/10">
               <ShoppingBag size={18} />
             </Button>
-            <Link href="/login">
-              <Button variant="outline" size="sm" className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
-                Login
-              </Button>
-            </Link>
-            <Button size="sm" variant="amber">
-              Get Started
-            </Button>
+            
+            {user ? (
+              <>
+                <Link href="/profile">
+                  <Button variant="ghost" size="sm" aria-label="User profile" className="hover:bg-teal-600/10">
+                    <User size={18} />
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="outline" size="sm" className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm" variant="amber">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -213,14 +240,35 @@ export default function Header(): JSX.Element {
                 </div>
               ))}
               <div className="flex flex-col space-y-2 pt-4">
-                <Link href="/login">
-                  <Button variant="teal" className="justify-start w-full">
-                    Login
-                  </Button>
-                </Link>
-                <Button variant="amber" className="justify-start">
-                  Get Started
-                </Button>
+                {user ? (
+                  <>
+                    <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="teal" className="justify-start w-full">
+                        Profile
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      className="justify-start w-full border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="teal" className="justify-start w-full">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="amber" className="justify-start w-full">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
