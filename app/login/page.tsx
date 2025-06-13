@@ -62,7 +62,12 @@ export default function LoginPage(): JSX.Element {
   useEffect(() => {
     // Select a random quote on component mount (page refresh)
     const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
-    setCurrentQuote(inspirationalQuotes[randomIndex]);
+    const selectedQuote = inspirationalQuotes[randomIndex];
+    
+    // Only update if we have a valid quote, otherwise keep the default
+    if (selectedQuote) {
+      setCurrentQuote(selectedQuote);
+    }
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
