@@ -53,21 +53,21 @@ const inspirationalQuotes: Quote[] = [
   }
 ];
 
+// Helper function to get a random quote with guaranteed return value
+function getRandomQuote(): Quote {
+  const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+  return inspirationalQuotes[randomIndex] || inspirationalQuotes[0];
+}
+
 export default function LoginPage(): JSX.Element {
-  const [currentQuote, setCurrentQuote] = useState<Quote>(inspirationalQuotes[0]);
+  const [currentQuote, setCurrentQuote] = useState<Quote>(() => getRandomQuote());
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   useEffect(() => {
     // Select a random quote on component mount (page refresh)
-    const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
-    const selectedQuote = inspirationalQuotes[randomIndex];
-    
-    // Only update if we have a valid quote, otherwise keep the default
-    if (selectedQuote) {
-      setCurrentQuote(selectedQuote);
-    }
+    setCurrentQuote(getRandomQuote());
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
