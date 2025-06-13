@@ -169,6 +169,8 @@ export default function EasterEgg({}: EasterEggProps) {
     const ctx = game.context;
     const canvas = game.canvas;
 
+    if (!ctx || !canvas) return;
+
     // Clear canvas
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
