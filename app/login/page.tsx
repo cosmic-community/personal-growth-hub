@@ -111,7 +111,15 @@ export default function LoginPage(): JSX.Element {
     setErrors({});
 
     try {
-      await login(email, password, rememberMe);
+      await login(email, password);
+      
+      // Handle remember me functionality after successful login
+      if (rememberMe) {
+        AuthService.setStoredCredentials({ email, password });
+      } else {
+        AuthService.clearStoredCredentials();
+      }
+      
       router.push('/profile');
     } catch (error) {
       setErrors({
