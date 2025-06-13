@@ -9,6 +9,7 @@ export default function EasterEgg({}: EasterEggProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [command, setCommand] = useState<string>('');
   const [isRocketFlying, setIsRocketFlying] = useState<boolean>(false);
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
   const handleCosmicLogo = (): void => {
     setShowModal(true);
@@ -21,6 +22,10 @@ export default function EasterEgg({}: EasterEggProps) {
       setShowModal(false);
       setCommand('');
       triggerRocketAnimation();
+    } else if (command.toLowerCase().trim() === 'winning') {
+      setShowModal(false);
+      setCommand('');
+      triggerWinningAnimation();
     } else {
       // For future commands, we can add more conditions here
       setCommand('');
@@ -42,6 +47,31 @@ export default function EasterEgg({}: EasterEggProps) {
     }, 2000);
   };
 
+  const triggerWinningAnimation = (): void => {
+    setIsRocketFlying(true);
+    
+    // Scroll to top smoothly
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+    // Start confetti after rocket begins flying
+    setTimeout(() => {
+      setShowConfetti(true);
+    }, 1000);
+    
+    // Hide rocket after animation
+    setTimeout(() => {
+      setIsRocketFlying(false);
+    }, 2000);
+    
+    // Hide confetti after 5 seconds
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 6000);
+  };
+
   const closeModal = (): void => {
     setShowModal(false);
     setCommand('');
@@ -60,6 +90,19 @@ export default function EasterEgg({}: EasterEggProps) {
       return () => document.removeEventListener('keydown', handleEscape);
     }
   }, [showModal]);
+
+  // Generate confetti pieces
+  const confettiPieces = Array.from({ length: 50 }, (_, i) => (
+    <div
+      key={i}
+      className="confetti-piece"
+      style={{
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 3}s`,
+        backgroundColor: ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'][Math.floor(Math.random() * 6)]
+      }}
+    />
+  ));
 
   return (
     <>
@@ -152,7 +195,7 @@ export default function EasterEgg({}: EasterEggProps) {
             
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                💡 <strong>Hint:</strong> Try typing "cosmic" to launch a rocket ship to the top!
+                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride, or "winning" for a celebration!
               </p>
             </div>
           </div>
@@ -174,6 +217,13 @@ export default function EasterEgg({}: EasterEggProps) {
         </div>
       )}
 
+      {/* Confetti Animation */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
+          {confettiPieces}
+        </div>
+      )}
+
       <style jsx>{`
         .rocket-flight {
           position: absolute;
@@ -185,6 +235,15 @@ export default function EasterEgg({}: EasterEggProps) {
         
         .rocket-icon {
           animation: rocketSpin 0.5s linear infinite;
+        }
+        
+        .confetti-piece {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          top: -10px;
+          animation: confettiFall 4s linear infinite;
+          opacity: 0.9;
         }
         
         @keyframes rocketFly {
@@ -214,6 +273,17 @@ export default function EasterEgg({}: EasterEggProps) {
           }
           to {
             transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes confettiFall {
+          0% {
+            transform: translateY(-100vh) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
           }
         }
       `}</style>
