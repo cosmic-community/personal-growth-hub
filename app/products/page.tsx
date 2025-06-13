@@ -8,8 +8,25 @@ export const metadata: Metadata = {
   description: 'Browse our complete collection of professional digital resources for personal development, relationship improvement, and therapeutic growth.',
 };
 
+// Define interfaces for static products
+interface StaticProduct {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  metadata: {
+    price: number;
+    description: string;
+    category: string;
+    image: {
+      imgix_url: string;
+    };
+    features: string[];
+  };
+}
+
 // Static products data
-const staticProducts = [
+const staticProducts: StaticProduct[] = [
   {
     id: 'video-series-5hr',
     title: '5-Hour Video Series: Transform Your Inner Voice',
@@ -56,14 +73,16 @@ const staticProducts = [
 ];
 
 export default async function ProductsPage() {
-  let cosmicProducts = [];
-  let categories = [];
+  let cosmicProducts: any[] = [];
+  let categories: any[] = [];
   
   try {
-    [cosmicProducts, categories] = await Promise.all([
+    const [fetchedProducts, fetchedCategories] = await Promise.all([
       getProducts(),
       getProductCategories(),
     ]);
+    cosmicProducts = fetchedProducts;
+    categories = fetchedCategories;
   } catch (error) {
     console.error('Error fetching Cosmic data:', error);
     // Continue with static products only if Cosmic fails
