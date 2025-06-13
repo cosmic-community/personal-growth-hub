@@ -111,22 +111,31 @@ export default function LoginPage(): JSX.Element {
     setErrors({});
 
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       
       // Handle remember me functionality after successful login
       if (rememberMe) {
-        AuthService.setStoredCredentials({ email, password });
+        AuthService.setStoredCredentials({ email: email.trim(), password });
       } else {
         AuthService.clearStoredCredentials();
       }
       
       router.push('/profile');
     } catch (error) {
+      console.error('Login error:', error);
       setErrors({
-        submit: error instanceof Error ? error.message : 'Invalid email or password'
+        submit: error instanceof Error ? error.message : 'Login failed. Please check your credentials and try again.'
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const clearErrors = (field: string): void => {
+    if (errors[field]) {
+      const newErrors = { ...errors };
+      delete newErrors[field];
+      setErrors(newErrors);
     }
   };
 
@@ -168,6 +177,13 @@ export default function LoginPage(): JSX.Element {
             <p className="mt-2 text-muted-foreground">
               Sign in to your account to continue your journey
             </p>
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-700">
+                <strong>Demo Account:</strong><br />
+                Email: john.doe@example.com<br />
+                Password: password123
+              </p>
+            </div>
           </div>
 
           <Card className="p-8 shadow-lg">
@@ -183,11 +199,8 @@ export default function LoginPage(): JSX.Element {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (errors.email) {
-                      const newErrors = { ...errors };
-                      delete newErrors.email;
-                      setErrors(newErrors);
-                    }
+                    clearErrors('email');
+                    clearErrors('submit');
                   }}
                   className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
                     errors.email ? 'border-red-500' : 'border-border'
@@ -211,11 +224,8 @@ export default function LoginPage(): JSX.Element {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      if (errors.password) {
-                        const newErrors = { ...errors };
-                        delete newErrors.password;
-                        setErrors(newErrors);
-                      }
+                      clearErrors('password');
+                      clearErrors('submit');
                     }}
                     className={`w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-background text-foreground ${
                       errors.password ? 'border-red-500' : 'border-border'
@@ -268,7 +278,9 @@ export default function LoginPage(): JSX.Element {
               </Button>
 
               {errors.submit && (
-                <p className="text-sm text-red-600 text-center">{errors.submit}</p>
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-600 text-center">{errors.submit}</p>
+                </div>
               )}
             </form>
 

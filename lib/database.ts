@@ -163,11 +163,16 @@ export class UserDatabase {
       throw new Error('User not found');
     }
 
+    const currentUser = users[userIndex];
+    if (!currentUser) {
+      throw new Error('User not found');
+    }
+
     const updatedUser = {
-      ...users[userIndex]!,
+      ...currentUser,
       ...updates,
       id: userId, // Ensure ID doesn't change
-      joinedDate: users[userIndex]!.joinedDate // Ensure joined date doesn't change
+      joinedDate: currentUser.joinedDate // Ensure joined date doesn't change
     };
 
     users[userIndex] = updatedUser;
@@ -181,8 +186,12 @@ export class UserDatabase {
   static authenticateUser(email: string, password: string): UserAccount {
     const user = this.findUserByEmail(email);
     
-    if (!user || user.password !== password) {
-      throw new Error('Invalid email or password');
+    if (!user) {
+      throw new Error('No account found with this email address');
+    }
+    
+    if (user.password !== password) {
+      throw new Error('Incorrect password');
     }
 
     // Update last login
@@ -251,6 +260,9 @@ export class UserDatabase {
       
       if (userIndex === -1) return;
 
+      const currentUser = users[userIndex];
+      if (!currentUser) return;
+
       const activityEntry: ActivityLogEntry = {
         id: `activity-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         userId,
@@ -259,15 +271,15 @@ export class UserDatabase {
         details
       };
 
-      if (!users[userIndex]!.activityLog) {
-        users[userIndex]!.activityLog = [];
+      if (!currentUser.activityLog) {
+        currentUser.activityLog = [];
       }
 
-      users[userIndex]!.activityLog!.push(activityEntry);
+      currentUser.activityLog.push(activityEntry);
       
       // Keep only last 100 activities per user
-      if (users[userIndex]!.activityLog!.length > 100) {
-        users[userIndex]!.activityLog = users[userIndex]!.activityLog!.slice(-100);
+      if (currentUser.activityLog.length > 100) {
+        currentUser.activityLog = currentUser.activityLog.slice(-100);
       }
 
       this.saveAllUsers(users);
