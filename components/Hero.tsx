@@ -18,8 +18,7 @@ const trustIndicators = [
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: 'easeOut' }
+  animate: { opacity: 1, y: 0 }
 };
 
 const staggerContainer = {
@@ -51,6 +50,7 @@ export default function Hero({ categories }: HeroProps) {
           <motion.h1 
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-balance"
             variants={fadeInUp}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             You deserve to be{' '}
             <span className="gradient-text">happy</span>
@@ -59,6 +59,7 @@ export default function Hero({ categories }: HeroProps) {
           <motion.p 
             className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto text-balance"
             variants={fadeInUp}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
           >
             What type of therapy are you looking for?
           </motion.p>
@@ -66,6 +67,7 @@ export default function Hero({ categories }: HeroProps) {
           <motion.div 
             className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
             variants={fadeInUp}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
           >
             <Button size="lg" className="text-lg px-8 py-4">
               Start Your Journey
@@ -87,7 +89,7 @@ export default function Hero({ categories }: HeroProps) {
             <motion.div
               key={category.id}
               variants={fadeInUp}
-              transition={{ delay: index * 0.1 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: index * 0.1 }}
             >
               <CategoryCard category={category} />
             </motion.div>
@@ -100,6 +102,7 @@ export default function Hero({ categories }: HeroProps) {
           variants={fadeInUp}
           initial="initial"
           animate="animate"
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
         >
           <p className="text-muted-foreground text-sm mb-6">
             We accept HSA/FSA for individual and Teen therapy
