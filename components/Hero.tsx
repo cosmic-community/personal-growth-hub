@@ -35,11 +35,11 @@ export default function Hero({ categories }: HeroProps) {
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-background to-primary/5"></div>
       
-      {/* Floating Elements with new accent colors */}
-      <div className="absolute top-20 right-10 w-20 h-20 bg-teal-600/20 rounded-full blur-xl animate-float"></div>
-      <div className="absolute bottom-20 left-10 w-16 h-16 bg-amber-600/30 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-primary/10 rounded-full blur-lg animate-pulse-soft"></div>
-      <div className="absolute top-1/3 right-1/4 w-14 h-14 bg-teal-600/15 rounded-full blur-lg animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
+      {/* Floating Elements with bolder accent colors */}
+      <div className="absolute top-20 right-10 w-20 h-20 bg-teal-500/40 rounded-full blur-xl animate-float"></div>
+      <div className="absolute bottom-20 left-10 w-16 h-16 bg-amber-500/50 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-1/2 left-1/4 w-12 h-12 bg-primary/25 rounded-full blur-lg animate-pulse-soft"></div>
+      <div className="absolute top-1/3 right-1/4 w-14 h-14 bg-teal-500/35 rounded-full blur-lg animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
       
       <div className="container relative z-10 section-padding">
         <motion.div 
