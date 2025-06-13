@@ -19,7 +19,7 @@ export default function MatrixEasterEgg({ isActive, onDeactivate }: { isActive: 
 
   const getRandomChar = useCallback((): string => {
     const index = Math.floor(Math.random() * MATRIX_CHARS.length);
-    return MATRIX_CHARS[index] || MATRIX_CHARS[0];
+    return MATRIX_CHARS[index] || '0';
   }, []);
 
   const createColumn = useCallback((id: number, x: number): MatrixColumn => {
