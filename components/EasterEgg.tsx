@@ -22,6 +22,14 @@ interface PongGame {
   ballSize: number;
 }
 
+interface MatrixColumn {
+  chars: string[];
+  x: number;
+  y: number;
+  speed: number;
+  opacity: number;
+}
+
 export default function EasterEgg({}: EasterEggProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [command, setCommand] = useState<string>('');
@@ -29,8 +37,11 @@ export default function EasterEgg({}: EasterEggProps) {
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [showSoccerGoal, setShowSoccerGoal] = useState<boolean>(false);
   const [showPongGame, setShowPongGame] = useState<boolean>(false);
+  const [isMatrixActive, setIsMatrixActive] = useState<boolean>(false);
+  const [matrixColumns, setMatrixColumns] = useState<MatrixColumn[]>([]);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const matrixCanvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<PongGame>({
     canvas: null,
     context: null,
@@ -48,6 +59,7 @@ export default function EasterEgg({}: EasterEggProps) {
     ballSize: 10
   });
   const animationFrameRef = useRef<number | null>(null);
+  const matrixAnimationRef = useRef<number | null>(null);
   const keysRef = useRef<{[key: string]: boolean}>({});
 
   const handleHeartClick = (): void => {
@@ -77,10 +89,105 @@ export default function EasterEgg({}: EasterEggProps) {
       setShowModal(false);
       setCommand('');
       triggerPongGame();
+    } else if (command.toLowerCase().trim() === 'neo') {
+      setShowModal(false);
+      setCommand('');
+      triggerMatrixMode();
     } else {
       // For future commands, we can add more conditions here
       setCommand('');
     }
+  };
+
+  const triggerMatrixMode = (): void => {
+    setIsMatrixActive(true);
+    initializeMatrix();
+    
+    // Auto-exit after 10 seconds
+    setTimeout(() => {
+      exitMatrixMode();
+    }, 10000);
+  };
+
+  const exitMatrixMode = (): void => {
+    setIsMatrixActive(false);
+    setMatrixColumns([]);
+    if (matrixAnimationRef.current) {
+      cancelAnimationFrame(matrixAnimationRef.current);
+    }
+  };
+
+  const initializeMatrix = (): void => {
+    const canvas = matrixCanvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const columns = Math.floor(canvas.width / 20);
+    const newColumns: MatrixColumn[] = [];
+
+    for (let i = 0; i < columns; i++) {
+      newColumns.push({
+        chars: [],
+        x: i * 20,
+        y: 0,
+        speed: Math.random() * 3 + 1,
+        opacity: Math.random()
+      });
+    }
+
+    setMatrixColumns(newColumns);
+    startMatrixAnimation();
+  };
+
+  const startMatrixAnimation = (): void => {
+    const canvas = matrixCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+
+    const animate = (): void => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00FF00';
+      ctx.font = '15px monospace';
+
+      setMatrixColumns(prev => prev.map(column => {
+        // Add new character at the top
+        if (Math.random() > 0.975) {
+          const newChar = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+          column.chars.unshift(newChar);
+        }
+
+        // Remove characters that have fallen off screen
+        column.chars = column.chars.filter((_, index) => (column.y + index * 20) < canvas.height + 100);
+
+        // Draw characters
+        column.chars.forEach((char, index) => {
+          const charY = column.y + index * 20;
+          const opacity = Math.max(0, 1 - (index / column.chars.length));
+          ctx.fillStyle = `rgba(0, 255, 0, ${opacity})`;
+          ctx.fillText(char, column.x, charY);
+        });
+
+        // Update column position
+        return {
+          ...column,
+          y: column.y + column.speed
+        };
+      }));
+
+      if (isMatrixActive) {
+        matrixAnimationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
   };
 
   const triggerRocketAnimation = (): void => {
@@ -293,13 +400,18 @@ export default function EasterEgg({}: EasterEggProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       keysRef.current[e.key] = true;
+      
+      // Exit Matrix mode on Escape
+      if (e.key === 'Escape' && isMatrixActive) {
+        exitMatrixMode();
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent): void => {
       keysRef.current[e.key] = false;
     };
 
-    if (showPongGame) {
+    if (showPongGame || isMatrixActive) {
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('keyup', handleKeyUp);
 
@@ -308,7 +420,7 @@ export default function EasterEgg({}: EasterEggProps) {
         window.removeEventListener('keyup', handleKeyUp);
       };
     }
-  }, [showPongGame]);
+  }, [showPongGame, isMatrixActive]);
 
   // Initialize game when Pong modal opens
   useEffect(() => {
@@ -325,23 +437,40 @@ export default function EasterEgg({}: EasterEggProps) {
     };
   }, [showPongGame, initPongGame]);
 
+  // Initialize Matrix when activated
+  useEffect(() => {
+    if (isMatrixActive) {
+      setTimeout(() => {
+        initializeMatrix();
+      }, 100);
+    }
+
+    return () => {
+      if (matrixAnimationRef.current) {
+        cancelAnimationFrame(matrixAnimationRef.current);
+      }
+    };
+  }, [isMatrixActive]);
+
   // Close modal on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
         if (showPongGame) {
           closePongGame();
+        } else if (isMatrixActive) {
+          exitMatrixMode();
         } else {
           closeModal();
         }
       }
     };
 
-    if (showModal || showPongGame) {
+    if (showModal || showPongGame || isMatrixActive) {
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
     }
-  }, [showModal, showPongGame]);
+  }, [showModal, showPongGame, isMatrixActive]);
 
   // Generate firework bursts
   const createFireworkBurst = (x: number, y: number, color: string, delay: number) => {
@@ -445,8 +574,27 @@ export default function EasterEgg({}: EasterEggProps) {
             
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride, "goal" for a soccer animation, or "pong" for a retro game!
+                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride, "goal" for soccer, "pong" for retro gaming, or "neo" for the Matrix!
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Matrix Mode */}
+      {isMatrixActive && (
+        <div className="fixed inset-0 z-50 bg-black">
+          <canvas
+            ref={matrixCanvasRef}
+            className="absolute inset-0 w-full h-full"
+            style={{ cursor: 'none' }}
+          />
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="text-green-400 text-2xl font-mono text-center animate-pulse">
+              Welcome to the Matrix
+            </div>
+            <div className="text-green-400 text-sm font-mono text-center mt-2">
+              Press ESC to exit
             </div>
           </div>
         </div>
