@@ -5,7 +5,12 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Eye, EyeOff } from 'lucide-react';
 
-const inspirationalQuotes = [
+interface Quote {
+  text: string;
+  author: string;
+}
+
+const inspirationalQuotes: Quote[] = [
   {
     text: "The only way to do great work is to love what you do.",
     author: "Steve Jobs"
@@ -48,11 +53,11 @@ const inspirationalQuotes = [
   }
 ];
 
-export default function LoginPage() {
-  const [currentQuote, setCurrentQuote] = useState(inspirationalQuotes[0]);
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function LoginPage(): JSX.Element {
+  const [currentQuote, setCurrentQuote] = useState<Quote>(inspirationalQuotes[0]);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   useEffect(() => {
     // Select a random quote on component mount (page refresh)
@@ -60,7 +65,7 @@ export default function LoginPage() {
     setCurrentQuote(inspirationalQuotes[randomIndex]);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     // Handle login logic here
     console.log('Login attempt:', { email, password });

@@ -6,13 +6,23 @@ import { Menu, X, User, ShoppingBag, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
 
-export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+interface NavigationItem {
+  name: string;
+  href: string;
+  hasDropdown?: boolean;
+  dropdownItems?: Array<{
+    name: string;
+    href: string;
+  }>;
+}
+
+export default function Header(): JSX.Element {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isProductsOpen, setIsProductsOpen] = useState<boolean>(false);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       setIsScrolled(window.scrollY > 0);
     };
 
@@ -20,7 +30,7 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigation = [
+  const navigation: NavigationItem[] = [
     { 
       name: 'Products', 
       href: '/products',
@@ -37,11 +47,11 @@ export default function Header() {
     { name: 'Contact', href: '/contact' },
   ];
 
-  const handleProductsMouseEnter = () => {
+  const handleProductsMouseEnter = (): void => {
     setIsProductsOpen(true);
   };
 
-  const handleProductsMouseLeave = () => {
+  const handleProductsMouseLeave = (): void => {
     setIsProductsOpen(false);
   };
 
