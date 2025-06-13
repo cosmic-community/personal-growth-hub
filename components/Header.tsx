@@ -127,9 +127,11 @@ export default function Header() {
             <Button variant="ghost" size="sm" aria-label="Shopping cart" className="hover:bg-amber-600/10">
               <ShoppingBag size={18} />
             </Button>
-            <Button variant="outline" size="sm" className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
-              Login
-            </Button>
+            <Link href="/login">
+              <Button variant="outline" size="sm" className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
+                Login
+              </Button>
+            </Link>
             <Button size="sm" variant="amber">
               Get Started
             </Button>
@@ -201,9 +203,11 @@ export default function Header() {
                 </div>
               ))}
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="teal" className="justify-start">
-                  Login
-                </Button>
+                <Link href="/login">
+                  <Button variant="teal" className="justify-start w-full">
+                    Login
+                  </Button>
+                </Link>
                 <Button variant="amber" className="justify-start">
                   Get Started
                 </Button>
