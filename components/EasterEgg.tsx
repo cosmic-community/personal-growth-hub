@@ -26,6 +26,10 @@ export default function EasterEgg({}: EasterEggProps) {
       setShowModal(false);
       setCommand('');
       triggerWinningAnimation();
+    } else if (command.toLowerCase().trim() === 'jeff') {
+      setShowModal(false);
+      setCommand('');
+      window.open('https://www.linkedin.com/in/jeffhovinga/', '_blank');
     } else {
       // For future commands, we can add more conditions here
       setCommand('');
@@ -48,19 +52,7 @@ export default function EasterEgg({}: EasterEggProps) {
   };
 
   const triggerWinningAnimation = (): void => {
-    setIsRocketFlying(true);
     setShowConfetti(true);
-    
-    // Scroll to top smoothly
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-    
-    // Hide rocket after animation
-    setTimeout(() => {
-      setIsRocketFlying(false);
-    }, 2000);
     
     // Hide confetti after 5 seconds
     setTimeout(() => {
@@ -168,7 +160,7 @@ export default function EasterEgg({}: EasterEggProps) {
             
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride, or "winning" for a celebration!
+                💡 <strong>Hints:</strong> Try "cosmic" for a rocket ride!
               </p>
             </div>
           </div>
@@ -180,7 +172,7 @@ export default function EasterEgg({}: EasterEggProps) {
         <div className="fixed inset-0 pointer-events-none z-40">
           <div className="rocket-flight">
             <Rocket 
-              size={64} 
+              size={80} 
               className="text-orange-500 rocket-icon" 
               style={{
                 filter: 'drop-shadow(0 0 20px rgba(249, 115, 22, 0.8))'
