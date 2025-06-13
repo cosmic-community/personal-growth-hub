@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Heart, Mail, Phone, MapPin, Send } from 'lucide-react';
 import { Button } from './ui/Button';
 import { NewsletterSignup } from './NewsletterSignup';
+import EasterEgg from './EasterEgg';
 
 export default function Footer() {
   const footerLinks = {
@@ -166,6 +167,9 @@ export default function Footer() {
             </div>
           </div>
         </div>
+
+        {/* Easter Egg - Cosmic Logo */}
+        <EasterEgg />
       </div>
     </footer>
   );
