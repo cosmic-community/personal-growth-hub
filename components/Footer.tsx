@@ -162,14 +162,11 @@ export default function Footer() {
             </p>
             <div className="mt-4 md:mt-0 flex items-center">
               <span>Made with</span>
-              <Heart size={16} className="mx-1 text-amber-600" aria-hidden="true" />
+              <EasterEgg />
               <span>for your personal growth journey</span>
             </div>
           </div>
         </div>
-
-        {/* Easter Egg - Cosmic Logo */}
-        <EasterEgg />
       </div>
     </footer>
   );

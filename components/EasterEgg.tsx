@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Rocket } from 'lucide-react';
+import { X, Rocket, Heart } from 'lucide-react';
 
 interface EasterEggProps {}
 
@@ -11,7 +11,7 @@ export default function EasterEgg({}: EasterEggProps) {
   const [isRocketFlying, setIsRocketFlying] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
-  const handleCosmicLogo = (): void => {
+  const handleHeartClick = (): void => {
     setShowModal(true);
   };
 
@@ -106,44 +106,21 @@ export default function EasterEgg({}: EasterEggProps) {
 
   return (
     <>
-      {/* Cosmic Logo */}
-      <div className="flex justify-center py-8">
-        <button
-          onClick={handleCosmicLogo}
-          className="group relative p-4 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          aria-label="Open cosmic command center"
-        >
-          <div className="relative">
-            {/* Cosmic Logo SVG */}
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="transition-transform duration-300 group-hover:scale-110"
-            >
-              <circle cx="24" cy="24" r="20" fill="url(#cosmic-gradient)" />
-              <circle cx="24" cy="24" r="12" fill="white" fillOpacity="0.2" />
-              <circle cx="24" cy="24" r="6" fill="white" fillOpacity="0.4" />
-              <circle cx="18" cy="18" r="2" fill="white" fillOpacity="0.8" />
-              <circle cx="30" cy="16" r="1.5" fill="white" fillOpacity="0.6" />
-              <circle cx="32" cy="30" r="1" fill="white" fillOpacity="0.7" />
-              <circle cx="16" cy="32" r="1.5" fill="white" fillOpacity="0.5" />
-              <defs>
-                <linearGradient id="cosmic-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#6366f1" />
-                  <stop offset="50%" stopColor="#8b5cf6" />
-                  <stop offset="100%" stopColor="#ec4899" />
-                </linearGradient>
-              </defs>
-            </svg>
-            
-            {/* Glow effect */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
-          </div>
-        </button>
-      </div>
+      {/* Heart Easter Egg Trigger */}
+      <button
+        onClick={handleHeartClick}
+        className="mx-1 group relative transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-sm"
+        aria-label="Open cosmic command center"
+      >
+        <Heart 
+          size={16} 
+          className="text-amber-600 group-hover:text-amber-500 transition-colors cursor-pointer" 
+          aria-hidden="true" 
+        />
+        
+        {/* Subtle glow effect on hover */}
+        <div className="absolute inset-0 rounded-full bg-amber-400 opacity-0 group-hover:opacity-20 blur-sm transition-opacity duration-200"></div>
+      </button>
 
       {/* Command Modal */}
       {showModal && (
