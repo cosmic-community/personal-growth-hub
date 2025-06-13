@@ -53,14 +53,23 @@ const inspirationalQuotes: Quote[] = [
   }
 ];
 
+// Default quote as fallback
+const defaultQuote: Quote = {
+  text: "Every journey begins with a single step.",
+  author: "Unknown"
+};
+
 // Helper function to get a random quote with guaranteed return value
 function getRandomQuote(): Quote {
+  if (inspirationalQuotes.length === 0) {
+    return defaultQuote;
+  }
   const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
-  return inspirationalQuotes[randomIndex] || inspirationalQuotes[0];
+  return inspirationalQuotes[randomIndex] ?? defaultQuote;
 }
 
 export default function LoginPage(): JSX.Element {
-  const [currentQuote, setCurrentQuote] = useState<Quote>(() => getRandomQuote());
+  const [currentQuote, setCurrentQuote] = useState<Quote>(defaultQuote);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
