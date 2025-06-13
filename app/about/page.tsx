@@ -1,6 +1,6 @@
 import { getPage } from '@/lib/cosmic';
 import { Metadata } from 'next';
-import { CosmicObject } from 'types';
+import { Page } from '@/types';
 
 export const metadata: Metadata = {
   title: 'About Us - Personal Growth Hub',
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  let aboutPage: CosmicObject | null = null;
+  let aboutPage: Page | null = null;
 
   try {
     aboutPage = await getPage('about-us');

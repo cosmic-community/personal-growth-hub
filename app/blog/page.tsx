@@ -1,7 +1,7 @@
 import { getPosts } from '@/lib/cosmic';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { CosmicObject } from 'types';
+import { BlogPost } from '@/types';
 
 export const metadata: Metadata = {
   title: 'Blog - Personal Growth Hub',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  let posts: CosmicObject[] = [];
+  let posts: BlogPost[] = [];
 
   try {
     posts = await getPosts();
@@ -18,7 +18,7 @@ export default async function BlogPage() {
   }
 
   // Default blog posts if none exist in Cosmic
-  const defaultPosts = [
+  const defaultPosts: BlogPost[] = [
     {
       id: '1',
       title: '5 Simple Mindfulness Techniques for Busy Professionals',
@@ -27,7 +27,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Discover practical mindfulness techniques that fit into your busy schedule and help reduce stress throughout your workday.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'
+          imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+          url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'
         },
         author: 'Dr. Sarah Johnson',
         read_time: 5
@@ -41,7 +42,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Learn the psychological principles behind habit formation and discover evidence-based strategies for creating positive changes that stick.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b'
+          imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b',
+          url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b'
         },
         author: 'Dr. Michael Chen',
         read_time: 8
@@ -55,7 +57,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Understanding imposter syndrome and practical strategies to build genuine confidence and self-worth in your personal and professional life.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285'
+          imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285',
+          url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285'
         },
         author: 'Dr. Emily Rodriguez',
         read_time: 6
@@ -69,7 +72,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Learn how to set healthy boundaries in relationships and work to protect your mental health and improve your quality of life.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac'
+          imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac',
+          url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac'
         },
         author: 'Dr. James Wilson',
         read_time: 7
@@ -83,7 +87,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Practical, research-backed techniques for managing anxiety and building resilience during challenging and uncertain periods.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1'
+          imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1',
+          url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1'
         },
         author: 'Dr. Lisa Thompson',
         read_time: 9
@@ -97,7 +102,8 @@ export default async function BlogPage() {
       metadata: {
         excerpt: 'Explore the scientific benefits of gratitude practice and learn practical ways to incorporate thankfulness into your daily routine.',
         featured_image: {
-          imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'
+          imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+          url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'
         },
         author: 'Dr. Amanda Foster',
         read_time: 5

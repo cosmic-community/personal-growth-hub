@@ -25,6 +25,9 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
   }
 }
 
+// Alias for backward compatibility
+export const getCategories = getProductCategories;
+
 // Fetch all products with category data
 export async function getProducts(): Promise<Product[]> {
   try {
@@ -107,6 +110,9 @@ export async function getBlogPosts(limit?: number): Promise<BlogPost[]> {
     throw new Error('Failed to fetch blog posts');
   }
 }
+
+// Alias for backward compatibility
+export const getPosts = getBlogPosts;
 
 // Fetch single blog post by slug
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {

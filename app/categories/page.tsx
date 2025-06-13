@@ -1,7 +1,7 @@
 import { getCategories } from '@/lib/cosmic';
 import CategoryCard from '@/components/CategoryCard';
 import { Metadata } from 'next';
-import { CosmicObject } from 'types';
+import { ProductCategory } from '@/types';
 
 export const metadata: Metadata = {
   title: 'Categories - Personal Growth Hub',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CategoriesPage() {
-  let categories: CosmicObject[] = [];
+  let categories: ProductCategory[] = [];
 
   try {
     categories = await getCategories();
@@ -18,15 +18,17 @@ export default async function CategoriesPage() {
   }
 
   // Default categories if none exist in Cosmic
-  const defaultCategories = [
+  const defaultCategories: ProductCategory[] = [
     {
       id: '1',
       title: 'Mindfulness & Meditation',
       slug: 'mindfulness-meditation',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Discover inner peace and reduce stress with our comprehensive mindfulness and meditation resources.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'
+          imgix_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+          url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'
         }
       }
     },
@@ -34,10 +36,12 @@ export default async function CategoriesPage() {
       id: '2',
       title: 'Relationships & Communication',
       slug: 'relationships-communication',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Build stronger, healthier relationships with proven communication techniques and relationship tools.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac'
+          imgix_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac',
+          url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac'
         }
       }
     },
@@ -45,10 +49,12 @@ export default async function CategoriesPage() {
       id: '3',
       title: 'Career & Professional Growth',
       slug: 'career-professional-growth',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Advance your career and develop professional skills with our expert-designed resources.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'
+          imgix_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+          url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'
         }
       }
     },
@@ -56,10 +62,12 @@ export default async function CategoriesPage() {
       id: '4',
       title: 'Anxiety & Stress Management',
       slug: 'anxiety-stress-management',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Learn effective techniques to manage anxiety and stress, and build resilience for life challenges.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1'
+          imgix_url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1',
+          url: 'https://images.unsplash.com/photo-1499728603263-13726abce5b1'
         }
       }
     },
@@ -67,10 +75,12 @@ export default async function CategoriesPage() {
       id: '5',
       title: 'Self-Confidence & Self-Esteem',
       slug: 'self-confidence-esteem',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Build unshakeable confidence and develop a positive self-image with our empowering resources.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285'
+          imgix_url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285',
+          url: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285'
         }
       }
     },
@@ -78,10 +88,12 @@ export default async function CategoriesPage() {
       id: '6',
       title: 'Goal Setting & Achievement',
       slug: 'goal-setting-achievement',
+      created_at: '2024-01-01T00:00:00Z',
       metadata: {
         description: 'Turn your dreams into reality with proven goal-setting strategies and achievement frameworks.',
         image: {
-          imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b'
+          imgix_url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b',
+          url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b'
         }
       }
     }
