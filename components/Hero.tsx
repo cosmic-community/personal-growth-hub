@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import type { ProductCategory } from '@/types';
 import CategoryCard from './CategoryCard';
+import KonamiEasterEgg from './KonamiEasterEgg';
 import { Button } from './ui/Button';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -33,6 +34,9 @@ const staggerContainer = {
 export default function Hero({ categories }: HeroProps) {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Konami Code Easter Egg */}
+      <KonamiEasterEgg />
+      
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-background to-primary/5"></div>
       
