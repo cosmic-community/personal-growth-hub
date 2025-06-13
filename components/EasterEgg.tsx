@@ -49,17 +49,13 @@ export default function EasterEgg({}: EasterEggProps) {
 
   const triggerWinningAnimation = (): void => {
     setIsRocketFlying(true);
+    setShowConfetti(true);
     
     // Scroll to top smoothly
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
-    
-    // Start confetti after rocket begins flying
-    setTimeout(() => {
-      setShowConfetti(true);
-    }, 1000);
     
     // Hide rocket after animation
     setTimeout(() => {
@@ -69,7 +65,7 @@ export default function EasterEgg({}: EasterEggProps) {
     // Hide confetti after 5 seconds
     setTimeout(() => {
       setShowConfetti(false);
-    }, 6000);
+    }, 5000);
   };
 
   const closeModal = (): void => {
@@ -92,7 +88,7 @@ export default function EasterEgg({}: EasterEggProps) {
   }, [showModal]);
 
   // Generate confetti pieces
-  const confettiPieces = Array.from({ length: 50 }, (_, i) => (
+  const confettiPieces = Array.from({ length: 100 }, (_, i) => (
     <div
       key={i}
       className="confetti-piece"
@@ -184,10 +180,10 @@ export default function EasterEgg({}: EasterEggProps) {
         <div className="fixed inset-0 pointer-events-none z-40">
           <div className="rocket-flight">
             <Rocket 
-              size={32} 
+              size={64} 
               className="text-orange-500 rocket-icon" 
               style={{
-                filter: 'drop-shadow(0 0 10px rgba(249, 115, 22, 0.6))'
+                filter: 'drop-shadow(0 0 20px rgba(249, 115, 22, 0.8))'
               }}
             />
           </div>
@@ -216,30 +212,31 @@ export default function EasterEgg({}: EasterEggProps) {
         
         .confetti-piece {
           position: absolute;
-          width: 10px;
-          height: 10px;
+          width: 12px;
+          height: 12px;
           top: -10px;
           animation: confettiFall 4s linear infinite;
           opacity: 0.9;
+          border-radius: 2px;
         }
         
         @keyframes rocketFly {
           0% {
             bottom: 20px;
             left: 50%;
-            transform: translateX(-50%) rotate(0deg);
+            transform: translateX(-50%) rotate(0deg) scale(1);
             opacity: 1;
           }
           50% {
             bottom: 50vh;
             left: 50%;
-            transform: translateX(-50%) rotate(180deg);
+            transform: translateX(-50%) rotate(180deg) scale(1.2);
             opacity: 1;
           }
           100% {
             bottom: 100vh;
             left: 50%;
-            transform: translateX(-50%) rotate(360deg);
+            transform: translateX(-50%) rotate(360deg) scale(0.8);
             opacity: 0;
           }
         }
