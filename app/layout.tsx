@@ -75,11 +75,7 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
-              <ExitIntentPopup onEmailSubmitted={(email) => {
-                console.log('Email submitted:', email);
-                // Here you can integrate with your email service
-                // Example: send to your newsletter service, CRM, etc.
-              }} />
+              <ExitIntentPopup />
             </div>
           </AuthProvider>
         </ThemeProvider>

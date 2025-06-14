@@ -3,11 +3,7 @@
 import { useState } from 'react';
 import { useExitIntent } from '@/hooks/useExitIntent';
 
-interface ExitIntentPopupProps {
-  onEmailSubmitted?: (email: string) => void;
-}
-
-export default function ExitIntentPopup({ onEmailSubmitted }: ExitIntentPopupProps) {
+export default function ExitIntentPopup() {
   const { isTriggered, dismiss } = useExitIntent({ delay: 10000 });
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +37,9 @@ export default function ExitIntentPopup({ onEmailSubmitted }: ExitIntentPopupPro
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setIsSubmitted(true);
-      onEmailSubmitted?.(email);
+      
+      // Log the email for now - in production you'd send this to your email service
+      console.log('Email submitted for 10% discount:', email);
       
       // Auto-dismiss after 3 seconds
       setTimeout(() => {
