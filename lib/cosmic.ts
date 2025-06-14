@@ -28,6 +28,27 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
 // Alias for backward compatibility
 export const getCategories = getProductCategories;
 
+// Fetch products by category ID
+export async function getProductsByCategory(categoryId: string): Promise<Product[]> {
+  try {
+    const response = await cosmic.objects
+      .find({ 
+        type: 'products',
+        'metadata.category': categoryId 
+      })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1);
+    
+    return response.objects as Product[];
+  } catch (error) {
+    if (error && typeof error === 'object' && 'status' in error && error.status === 404) {
+      return [];
+    }
+    console.error('Error fetching products by category:', error);
+    return [];
+  }
+}
+
 // Fetch all products with category data
 export async function getProducts(): Promise<Product[]> {
   try {
