@@ -109,7 +109,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.cosmicjs.com" />
       </head>
       <body className={`${inter.className} antialiased min-h-screen bg-background text-foreground`}>
-        <ThemeProvider defaultTheme="light" attribute="class">
+        <ThemeProvider defaultTheme="light">
           <AuthProvider>
             <div className="relative flex min-h-screen flex-col">
               <ScrollProgress />
