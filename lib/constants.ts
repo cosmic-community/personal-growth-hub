@@ -107,7 +107,7 @@ export const TESTIMONIALS = [
   },
   {
     id: '2',
-    text: 'The best investment I've made in my personal development. Highly recommended!',
+    text: 'The best investment I have made in my personal development. Highly recommended!',
     author: 'Michael Chen',
     role: 'Software Engineer',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&auto=format,compress',
@@ -134,11 +134,11 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'How do I access my purchased content?',
-    answer: 'After purchase, you'll receive immediate access to your digital content through your personal dashboard. All materials are available for download and can be accessed anytime.',
+    answer: 'After purchase, you will receive immediate access to your digital content through your personal dashboard. All materials are available for download and can be accessed anytime.',
   },
   {
     question: 'Do you offer refunds?',
-    answer: 'Yes, we offer a 30-day money-back guarantee. If you're not satisfied with your purchase, contact us within 30 days for a full refund.',
+    answer: 'Yes, we offer a 30-day money-back guarantee. If you are not satisfied with your purchase, contact us within 30 days for a full refund.',
   },
   {
     question: 'Can I schedule multiple consultation sessions?',
