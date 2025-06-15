@@ -156,11 +156,11 @@ export default function Footer() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-            <p>
+          <div className="border-t border-border mt-8 pt-8 flex flex-col items-center space-y-4 text-sm text-muted-foreground">
+            <p className="text-center">
               © {currentYear} Personal Growth Hub. All rights reserved.
             </p>
-            <div className="mt-4 md:mt-0 flex items-center">
+            <div className="flex items-center justify-center">
               <span>Made with</span>
               <EasterEgg />
               <span>for your personal growth journey</span>
