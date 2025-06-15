@@ -341,7 +341,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <div className="mt-8 pt-8 border-t border-border">
                   <h3 className="text-lg font-semibold mb-4">Related Topics:</h3>
                   <div className="flex flex-wrap gap-2">
-                    {post.metadata.tags.map((tag, index) => (
+                    {post.metadata.tags.map((tag: string, index: number) => (
                       <span
                         key={index}
                         className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"

@@ -89,7 +89,6 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
-      'max-snippet': 160,
     },
   },
   verification: {

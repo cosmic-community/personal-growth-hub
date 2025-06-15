@@ -68,6 +68,7 @@ interface BlogPost extends CosmicObject {
     author?: string;
     publish_date?: string;
     read_time?: number;
+    tags?: string[];
   };
 }
 
