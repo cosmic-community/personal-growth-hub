@@ -48,7 +48,7 @@ export default function AnimatedBackground() {
         vy: (Math.random() - 0.5) * 0.5,
         size: Math.random() * 3 + 1,
         opacity: Math.random() * 0.5 + 0.1,
-        color: colors[Math.floor(Math.random() * colors.length)]
+        color: colors[Math.floor(Math.random() * colors.length)] || 'rgba(99, 102, 241, 0.4)'
       });
     }
 
