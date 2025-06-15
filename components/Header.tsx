@@ -100,7 +100,7 @@ export default function Header(): JSX.Element {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1" role="navigation" aria-label="Main navigation">
+          <nav className="hidden md:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
             {navigation.map((item) => (
               <div
                 key={item.name}
@@ -124,7 +124,7 @@ export default function Header(): JSX.Element {
                       />
                     </button>
                     {((item.name === 'Products' && isProductsOpen) || (item.name === 'About' && isAboutOpen)) && (
-                      <div className="absolute top-full left-0 mt-1 w-56 bg-popover border border-border rounded-md shadow-lg animate-fade-in">
+                      <div className="absolute top-full left-0 mt-0 w-56 bg-popover border border-border rounded-md shadow-lg animate-fade-in">
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => (
                             <Link
@@ -146,7 +146,7 @@ export default function Header(): JSX.Element {
                 ) : (
                   <Link
                     href={item.href}
-                    className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {item.name}
                   </Link>
