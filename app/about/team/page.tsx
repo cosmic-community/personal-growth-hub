@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/seo';
-import { generateStructuredData } from '@/lib/structured-data';
+import { generateSEOMetadata } from '@/lib/seo';
+import { getStructuredData } from '@/lib/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return generatePageMetadata({
+  return generateSEOMetadata({
     title: 'Our Team - TrueYou Therapy',
     description: 'Meet our team of licensed therapists, certified coaches, and mental health professionals dedicated to creating exceptional therapeutic resources.',
     path: '/about/team',
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function TeamPage() {
-  const structuredData = generateStructuredData({
+  const structuredData = getStructuredData({
     type: 'organization',
     title: 'Our Team - TrueYou Therapy',
     description: 'Licensed therapists, certified coaches, and mental health professionals creating exceptional therapeutic resources.',

@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/seo';
-import { generateStructuredData } from '@/lib/structured-data';
+import { generateSEOMetadata } from '@/lib/seo';
+import { getStructuredData } from '@/lib/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return generatePageMetadata({
+  return generateSEOMetadata({
     title: 'Our Mission - TrueYou Therapy',
     description: 'Our mission is to democratize access to professional mental health resources and empower individuals worldwide to achieve lasting personal growth and emotional wellness.',
     path: '/about/mission',
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function MissionPage() {
-  const structuredData = generateStructuredData({
+  const structuredData = getStructuredData({
     type: 'organization',
     title: 'Our Mission - TrueYou Therapy',
     description: 'Democratizing access to professional mental health resources and empowering personal growth worldwide.',

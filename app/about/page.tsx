@@ -1,11 +1,11 @@
 import { getPage } from '@/lib/cosmic';
 import { Metadata } from 'next';
 import { Page } from '@/types';
-import { generatePageMetadata } from '@/lib/seo';
-import { generateStructuredData } from '@/lib/structured-data';
+import { generateSEOMetadata } from '@/lib/seo';
+import { getStructuredData } from '@/lib/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return generatePageMetadata({
+  return generateSEOMetadata({
     title: 'About Us - TrueYou Therapy',
     description: 'Learn about our mission to make professional-grade personal development resources accessible to everyone. Our story, values, and commitment to your growth.',
     path: '/about',
@@ -22,7 +22,7 @@ export default async function AboutPage() {
     console.log('About page not found in Cosmic, using default content');
   }
 
-  const structuredData = generateStructuredData({
+  const structuredData = getStructuredData({
     type: 'organization',
     title: 'About TrueYou Therapy',
     description: 'Professional therapeutic resources and personalized consultation services for personal growth and mental wellness.',

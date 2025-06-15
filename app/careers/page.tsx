@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/seo';
-import { generateStructuredData } from '@/lib/structured-data';
+import { generateSEOMetadata } from '@/lib/seo';
+import { getStructuredData } from '@/lib/structured-data';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return generatePageMetadata({
+  return generateSEOMetadata({
     title: 'Careers - TrueYou Therapy',
     description: 'Join our mission to make professional mental health resources accessible worldwide. Explore career opportunities with our growing team of licensed professionals.',
     path: '/careers',
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function CareersPage() {
-  const structuredData = generateStructuredData({
+  const structuredData = getStructuredData({
     type: 'organization',
     title: 'Careers - TrueYou Therapy',
     description: 'Career opportunities in mental health, therapy, and digital wellness technology.',
