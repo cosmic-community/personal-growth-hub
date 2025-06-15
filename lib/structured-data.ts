@@ -207,7 +207,14 @@ export interface FAQPageSchema {
   }>;
 }
 
-export function getStructuredData() {
+export interface StructuredDataOptions {
+  type?: string;
+  title?: string;
+  description?: string;
+  url?: string;
+}
+
+export function getStructuredData(options?: StructuredDataOptions) {
   const organization: OrganizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',

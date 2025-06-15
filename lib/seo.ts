@@ -7,6 +7,7 @@ export interface SEOProps {
   keywords?: string[];
   image?: string;
   url?: string;
+  path?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
@@ -23,6 +24,7 @@ export function generateSEOMetadata({
   keywords = [],
   image,
   url,
+  path,
   type = 'website',
   publishedTime,
   modifiedTime,
@@ -38,7 +40,7 @@ export function generateSEOMetadata({
   
   const seoDescription = description || SITE_CONFIG.description;
   const seoImage = image || SITE_CONFIG.ogImage;
-  const seoUrl = url ? `${SITE_CONFIG.url}${url}` : SITE_CONFIG.url;
+  const seoUrl = url ? `${SITE_CONFIG.url}${url}` : path ? `${SITE_CONFIG.url}${path}` : SITE_CONFIG.url;
   const canonical = canonicalUrl || seoUrl;
   
   const allKeywords = [
