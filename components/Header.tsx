@@ -20,6 +20,7 @@ interface NavigationItem {
 export default function Header(): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isProductsOpen, setIsProductsOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { user, logout } = useAuth();
 
@@ -43,18 +44,34 @@ export default function Header(): JSX.Element {
         { name: '1-on-1 Consultation', href: '/products/consultation' },
       ]
     },
-    { name: 'Categories', href: '/categories' },
     { name: 'Blog', href: '/blog' },
-    { name: 'About', href: '/about' },
+    { 
+      name: 'About', 
+      href: '/about',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: 'Our Story', href: '/about' },
+        { name: 'Mission', href: '/about/mission' },
+        { name: 'Team', href: '/about/team' },
+        { name: 'Careers', href: '/careers' },
+      ]
+    },
     { name: 'Contact', href: '/contact' },
   ];
 
-  const handleProductsMouseEnter = (): void => {
-    setIsProductsOpen(true);
+  const handleDropdownMouseEnter = (dropdownType: 'products' | 'about'): void => {
+    if (dropdownType === 'products') {
+      setIsProductsOpen(true);
+      setIsAboutOpen(false);
+    } else if (dropdownType === 'about') {
+      setIsAboutOpen(true);
+      setIsProductsOpen(false);
+    }
   };
 
-  const handleProductsMouseLeave = (): void => {
+  const handleDropdownMouseLeave = (): void => {
     setIsProductsOpen(false);
+    setIsAboutOpen(false);
   };
 
   const handleLogout = (): void => {
@@ -88,25 +105,25 @@ export default function Header(): JSX.Element {
               <div
                 key={item.name}
                 className="relative"
-                onMouseEnter={item.hasDropdown ? handleProductsMouseEnter : undefined}
-                onMouseLeave={item.hasDropdown ? handleProductsMouseLeave : undefined}
+                onMouseEnter={item.hasDropdown ? () => handleDropdownMouseEnter(item.name.toLowerCase() as 'products' | 'about') : undefined}
+                onMouseLeave={item.hasDropdown ? handleDropdownMouseLeave : undefined}
               >
                 {item.hasDropdown ? (
                   <>
                     <button
                       className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-expanded={isProductsOpen}
+                      aria-expanded={item.name === 'Products' ? isProductsOpen : isAboutOpen}
                       aria-haspopup="true"
                     >
                       {item.name}
                       <ChevronDown 
                         size={16} 
                         className={`ml-1 transition-transform duration-200 ${
-                          isProductsOpen ? 'rotate-180' : ''
+                          (item.name === 'Products' ? isProductsOpen : isAboutOpen) ? 'rotate-180' : ''
                         }`} 
                       />
                     </button>
-                    {isProductsOpen && (
+                    {((item.name === 'Products' && isProductsOpen) || (item.name === 'About' && isAboutOpen)) && (
                       <div className="absolute top-full left-0 mt-1 w-56 bg-popover border border-border rounded-md shadow-lg animate-fade-in">
                         <div className="py-1">
                           {item.dropdownItems?.map((dropdownItem) => (
@@ -114,7 +131,10 @@ export default function Header(): JSX.Element {
                               key={dropdownItem.name}
                               href={dropdownItem.href}
                               className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                              onClick={() => setIsProductsOpen(false)}
+                              onClick={() => {
+                                setIsProductsOpen(false);
+                                setIsAboutOpen(false);
+                              }}
                             >
                               {dropdownItem.name}
                             </Link>
@@ -199,18 +219,26 @@ export default function Header(): JSX.Element {
                     <>
                       <button
                         className="flex items-center justify-between w-full px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        onClick={() => setIsProductsOpen(!isProductsOpen)}
-                        aria-expanded={isProductsOpen}
+                        onClick={() => {
+                          if (item.name === 'Products') {
+                            setIsProductsOpen(!isProductsOpen);
+                            setIsAboutOpen(false);
+                          } else if (item.name === 'About') {
+                            setIsAboutOpen(!isAboutOpen);
+                            setIsProductsOpen(false);
+                          }
+                        }}
+                        aria-expanded={item.name === 'Products' ? isProductsOpen : isAboutOpen}
                       >
                         {item.name}
                         <ChevronDown 
                           size={16} 
                           className={`transition-transform duration-200 ${
-                            isProductsOpen ? 'rotate-180' : ''
+                            (item.name === 'Products' ? isProductsOpen : isAboutOpen) ? 'rotate-180' : ''
                           }`} 
                         />
                       </button>
-                      {isProductsOpen && (
+                      {((item.name === 'Products' && isProductsOpen) || (item.name === 'About' && isAboutOpen)) && (
                         <div className="ml-4 mt-1 space-y-1">
                           {item.dropdownItems?.map((dropdownItem) => (
                             <Link
@@ -220,6 +248,7 @@ export default function Header(): JSX.Element {
                               onClick={() => {
                                 setIsMenuOpen(false);
                                 setIsProductsOpen(false);
+                                setIsAboutOpen(false);
                               }}
                             >
                               {dropdownItem.name}
