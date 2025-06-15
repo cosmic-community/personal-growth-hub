@@ -27,9 +27,18 @@ export const NAVIGATION_ITEMS = [
       { name: '1-on-1 Consultation', href: '/products/consultation' },
     ]
   },
-  { name: 'Categories', href: '/categories' },
   { name: 'Blog', href: '/blog' },
-  { name: 'About', href: '/about' },
+  {
+    name: 'About',
+    href: '/about',
+    hasDropdown: true,
+    dropdownItems: [
+      { name: 'Our Story', href: '/about' },
+      { name: 'Mission', href: '/about/mission' },
+      { name: 'Team', href: '/about/team' },
+      { name: 'Careers', href: '/careers' },
+    ]
+  },
   { name: 'Contact', href: '/contact' },
 ];
 
