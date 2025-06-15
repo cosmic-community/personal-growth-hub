@@ -1,11 +1,17 @@
 import { getPage } from '@/lib/cosmic';
 import { Metadata } from 'next';
 import { Page } from '@/types';
+import { generatePageMetadata } from '@/lib/seo';
+import { generateStructuredData } from '@/lib/structured-data';
 
-export const metadata: Metadata = {
-  title: 'About Us - Personal Growth Hub',
-  description: 'Learn about our mission to make professional-grade personal development resources accessible to everyone.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata({
+    title: 'About Us - TrueYou Therapy',
+    description: 'Learn about our mission to make professional-grade personal development resources accessible to everyone. Our story, values, and commitment to your growth.',
+    path: '/about',
+    type: 'website'
+  });
+}
 
 export default async function AboutPage() {
   let aboutPage: Page | null = null;
@@ -13,61 +19,156 @@ export default async function AboutPage() {
   try {
     aboutPage = await getPage('about-us');
   } catch (error) {
-    // Handle case where page doesn't exist in Cosmic
     console.log('About page not found in Cosmic, using default content');
   }
 
+  const structuredData = generateStructuredData({
+    type: 'organization',
+    title: 'About TrueYou Therapy',
+    description: 'Professional therapeutic resources and personalized consultation services for personal growth and mental wellness.',
+    url: '/about'
+  });
+
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="container-width section-padding py-12">
-        {aboutPage ? (
-          <>
-            <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 dark:text-white mb-8 text-center">
-              {aboutPage.metadata?.title || aboutPage.title}
-            </h1>
-            <div className="prose prose-lg prose-secondary dark:prose-invert max-w-4xl mx-auto">
-              <div dangerouslySetInnerHTML={{ __html: aboutPage.metadata?.content || '' }} />
-            </div>
-          </>
-        ) : (
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 dark:text-white mb-8">
-              About Our Mission
-            </h1>
-            <div className="prose prose-lg prose-secondary dark:prose-invert max-w-4xl mx-auto">
-              <p>
-                We believe everyone deserves access to high-quality resources for personal growth and well-being. 
-                Our digital products are created by licensed professionals and based on proven therapeutic techniques.
-              </p>
-              <h2>Our Story</h2>
-              <p>
-                Founded in 2020, we started with a simple goal: make professional-grade self-help resources 
-                accessible to everyone. What began as a small collection of worksheets has grown into a 
-                comprehensive library of courses, tools, and resources.
-              </p>
-              <h2>Our Values</h2>
-              <ul>
-                <li><strong>Quality:</strong> Every resource is reviewed by licensed professionals</li>
-                <li><strong>Accessibility:</strong> Affordable pricing and multiple format options</li>
-                <li><strong>Privacy:</strong> Your personal growth journey stays private</li>
-                <li><strong>Support:</strong> We're here to help you succeed</li>
-              </ul>
-              <h2>Our Team</h2>
-              <p>
-                Our team consists of licensed therapists, certified coaches, and experienced content creators 
-                who are passionate about mental health and personal development. We work together to ensure 
-                every resource meets the highest standards of quality and effectiveness.
-              </p>
-              <h2>Join Our Community</h2>
-              <p>
-                Join thousands of people who have transformed their lives with our resources. Whether you're 
-                just starting your personal growth journey or looking to deepen your practice, we're here 
-                to support you every step of the way.
-              </p>
-            </div>
-          </div>
-        )}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="container mx-auto px-4 py-16">
+          {aboutPage ? (
+            <>
+              <div className="text-center mb-16">
+                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-600 to-amber-600 bg-clip-text text-transparent mb-6">
+                  {aboutPage.metadata?.title || aboutPage.title}
+                </h1>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  Discover our story and commitment to your personal growth journey
+                </p>
+              </div>
+              <div className="prose prose-lg prose-teal dark:prose-invert max-w-4xl mx-auto">
+                <div dangerouslySetInnerHTML={{ __html: aboutPage.metadata?.content || '' }} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-center mb-16">
+                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-teal-600 to-amber-600 bg-clip-text text-transparent mb-6">
+                  About TrueYou Therapy
+                </h1>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  Empowering personal growth through professional therapeutic resources and personalized guidance
+                </p>
+              </div>
+              
+              <div className="max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-12 mb-16">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                    <h2 className="text-3xl font-bold text-teal-600 mb-6">Our Story</h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      Founded with a passion for making professional-grade mental health resources accessible to everyone, 
+                      TrueYou Therapy emerged from the recognition that personal growth shouldn't be limited by geography, 
+                      cost, or availability.
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      What started as a small collection of therapeutic tools has evolved into a comprehensive platform 
+                      offering video series, personalized consultations, and evidence-based resources created by licensed professionals.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                    <h2 className="text-3xl font-bold text-amber-600 mb-6">Our Vision</h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      We envision a world where everyone has access to the tools and support they need to thrive mentally 
+                      and emotionally. Our platform bridges the gap between professional therapy and self-help resources.
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Through innovative digital solutions and personalized guidance, we're making mental wellness 
+                      more accessible, affordable, and effective for people from all walks of life.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-teal-500 to-amber-500 rounded-2xl p-1 mb-16">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8">
+                    <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-teal-600 to-amber-600 bg-clip-text text-transparent">
+                      Our Core Values
+                    </h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl">🎯</span>
+                        </div>
+                        <h3 className="font-bold text-teal-600 mb-2">Quality</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          Every resource is reviewed and approved by licensed mental health professionals
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl">🤝</span>
+                        </div>
+                        <h3 className="font-bold text-amber-600 mb-2">Accessibility</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          Affordable pricing and flexible formats make growth resources available to all
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl">🔒</span>
+                        </div>
+                        <h3 className="font-bold text-blue-600 mb-2">Privacy</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          Your personal growth journey remains completely confidential and secure
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl">💪</span>
+                        </div>
+                        <h3 className="font-bold text-green-600 mb-2">Support</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          Ongoing guidance and community support throughout your journey
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                  <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-teal-600 to-amber-600 bg-clip-text text-transparent">
+                    Join Our Community
+                  </h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Join thousands of individuals who have transformed their lives with our professional resources. 
+                    Whether you're beginning your personal growth journey or looking to deepen your practice, 
+                    we're here to support you every step of the way.
+                  </p>
+                  
+                  <div className="grid md:grid-cols-3 gap-6 text-center">
+                    <div>
+                      <div className="text-3xl font-bold text-teal-600 mb-2">10,000+</div>
+                      <div className="text-gray-600 dark:text-gray-300">People Helped</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-amber-600 mb-2">95%</div>
+                      <div className="text-gray-600 dark:text-gray-300">Satisfaction Rate</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
+                      <div className="text-gray-600 dark:text-gray-300">Professional Resources</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
