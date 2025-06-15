@@ -180,7 +180,7 @@ export default function RootLayout({
               </main>
               <Footer />
               <ExitIntentPopup />
-              <FloatingActionButton variant="scroll-to-top" />
+              <FloatingActionButton />
             </div>
           </AuthProvider>
         </ThemeProvider>
