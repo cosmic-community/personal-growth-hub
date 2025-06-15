@@ -4,6 +4,8 @@ import { getBlogPosts, getBlogPost } from '@/lib/cosmic';
 import { BlogPost } from '@/types';
 import { Clock, User, Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { generateSEOMetadata } from '@/lib/seo';
+import { getBlogPostStructuredData } from '@/lib/structured-data';
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -28,33 +30,44 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     const post = await getBlogPost(slug);
     
     if (!post) {
-      return {
-        title: 'Post Not Found - TrueYou Therapy Blog',
-        description: 'The requested blog post could not be found.',
-      };
+      return generateSEOMetadata({
+        title: 'Article Not Found',
+        description: 'The requested mental health article could not be found.',
+        noIndex: true,
+      });
     }
 
-    return {
-      title: `${post.title} - TrueYou Therapy Blog`,
-      description: post.metadata?.excerpt || post.metadata?.content?.substring(0, 160) + '...' || 'Read the latest insights on personal development and mental health.',
-      openGraph: {
-        title: post.title,
-        description: post.metadata?.excerpt || 'Personal development insights from TrueYou Therapy',
-        images: post.metadata?.featured_image?.imgix_url ? [
-          {
-            url: `${post.metadata.featured_image.imgix_url}?w=1200&h=630&fit=crop&auto=format,compress`,
-            width: 1200,
-            height: 630,
-            alt: post.title,
-          }
-        ] : [],
-      },
-    };
+    const keywords = [
+      'mental health article',
+      'therapy insights',
+      'psychological wellness',
+      'mental health tips',
+      'therapeutic techniques',
+      'evidence-based therapy',
+      'mental wellness guidance',
+      ...(post.metadata?.tags || []),
+    ];
+
+    return generateSEOMetadata({
+      title: post.title,
+      description: post.metadata?.excerpt || post.metadata?.content?.substring(0, 160) + '...' || 'Evidence-based mental health insights and therapeutic guidance.',
+      keywords,
+      image: post.metadata?.featured_image?.imgix_url ? 
+        `${post.metadata.featured_image.imgix_url}?w=1200&h=630&fit=crop&auto=format,compress` : 
+        undefined,
+      type: 'article',
+      url: `/blog/${slug}`,
+      author: post.metadata?.author,
+      publishedTime: post.created_at,
+      modifiedTime: post.modified_at,
+      section: 'Mental Health',
+      tags: post.metadata?.tags || [],
+    });
   } catch (error) {
-    return {
-      title: 'Blog Post - TrueYou Therapy',
-      description: 'Personal development insights and resources.',
-    };
+    return generateSEOMetadata({
+      title: 'Mental Health Article',
+      description: 'Evidence-based mental health insights and therapeutic guidance.',
+    });
   }
 }
 
@@ -121,7 +134,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'
           },
           author: 'Dr. Sarah Johnson',
-          read_time: 5
+          read_time: 5,
+          tags: ['mindfulness', 'stress management', 'workplace wellness', 'meditation'],
         }
       },
       'science-habit-formation-lasting-change': {
@@ -193,7 +207,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             url: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b'
           },
           author: 'Dr. Michael Chen',
-          read_time: 8
+          read_time: 8,
+          tags: ['habits', 'behavioral psychology', 'neuroscience', 'personal development'],
         }
       }
     };
@@ -205,6 +220,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const structuredData = getBlogPostStructuredData(post);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -214,162 +231,204 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 to-teal-600/5">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <Link 
-                href="/blog"
-                className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
-              >
-                <ArrowLeft size={20} className="mr-2" />
-                Back to Blog
-              </Link>
-            </div>
-            
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                {post.title}
-              </h1>
-              
-              <div className="flex flex-wrap items-center justify-center gap-6 text-muted-foreground mb-8">
-                {post.metadata?.author && (
-                  <div className="flex items-center gap-2">
-                    <User size={16} />
-                    <span>{post.metadata.author}</span>
-                  </div>
-                )}
-                
-                <div className="flex items-center gap-2">
-                  <Calendar size={16} />
-                  <span>{formatDate(post.created_at)}</span>
-                </div>
-                
-                {post.metadata?.read_time && (
-                  <div className="flex items-center gap-2">
-                    <Clock size={16} />
-                    <span>{post.metadata.read_time} min read</span>
-                  </div>
-                )}
-              </div>
-              
-              {post.metadata?.excerpt && (
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  {post.metadata.excerpt}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Image */}
-      {post.metadata?.featured_image && (
-        <section className="py-8">
+    <>
+      {/* Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="py-16 bg-gradient-to-br from-primary/5 to-teal-600/5">
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <div className="aspect-video rounded-lg overflow-hidden">
-                <img
-                  src={`${post.metadata.featured_image.imgix_url}?w=1200&h=675&fit=crop&auto=format,compress`}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
+              <nav className="mb-8" aria-label="Breadcrumb">
+                <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <li><Link href="/" className="hover:text-foreground transition-colors">Home</Link></li>
+                  <li>/</li>
+                  <li><Link href="/blog" className="hover:text-foreground transition-colors">Mental Health Blog</Link></li>
+                  <li>/</li>
+                  <li className="text-foreground">{post.title}</li>
+                </ol>
+              </nav>
+              
+              <div className="mb-8">
+                <Link 
+                  href="/blog"
+                  className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
+                >
+                  <ArrowLeft size={20} className="mr-2" />
+                  Back to Mental Health Articles
+                </Link>
+              </div>
+              
+              <div className="text-center">
+                <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                  {post.title}
+                </h1>
+                
+                <div className="flex flex-wrap items-center justify-center gap-6 text-muted-foreground mb-8">
+                  {post.metadata?.author && (
+                    <div className="flex items-center gap-2">
+                      <User size={16} />
+                      <span>{post.metadata.author}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-2">
+                    <Calendar size={16} />
+                    <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
+                  </div>
+                  
+                  {post.metadata?.read_time && (
+                    <div className="flex items-center gap-2">
+                      <Clock size={16} />
+                      <span>{post.metadata.read_time} min read</span>
+                    </div>
+                  )}
+                </div>
+                
+                {post.metadata?.excerpt && (
+                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    {post.metadata.excerpt}
+                  </p>
+                )}
               </div>
             </div>
           </div>
-        </section>
-      )}
+        </header>
 
-      {/* Article Content */}
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <div className="prose prose-lg prose-gray dark:prose-invert max-w-none">
-              {post.metadata?.content ? (
-                <div dangerouslySetInnerHTML={{ __html: post.metadata.content }} />
-              ) : (
-                <div>
-                  <p>This article is currently being prepared. Check back soon for the full content!</p>
+        {/* Featured Image */}
+        {post.metadata?.featured_image && (
+          <section className="py-8">
+            <div className="container">
+              <div className="max-w-4xl mx-auto">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img
+                    src={`${post.metadata.featured_image.imgix_url}?w=1200&h=675&fit=crop&auto=format,compress`}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Author Bio */}
-      {post.metadata?.author && (
-        <section className="py-16 bg-muted/30">
+        {/* Article Content */}
+        <article className="py-16" itemScope itemType="https://schema.org/BlogPosting">
+          <meta itemProp="headline" content={post.title} />
+          <meta itemProp="datePublished" content={post.created_at} />
+          <meta itemProp="dateModified" content={post.modified_at} />
+          {post.metadata?.author && <meta itemProp="author" content={post.metadata.author} />}
+          
           <div className="container">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-background rounded-lg p-8">
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <User className="w-8 h-8 text-primary" />
-                  </div>
+              <div className="prose prose-lg prose-gray dark:prose-invert max-w-none article-content" itemProp="articleBody">
+                {post.metadata?.content ? (
+                  <div dangerouslySetInnerHTML={{ __html: post.metadata.content }} />
+                ) : (
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">About {post.metadata.author}</h3>
-                    <p className="text-muted-foreground">
-                      {post.metadata.author} is a licensed mental health professional specializing in evidence-based 
-                      therapeutic approaches. With years of experience in clinical practice and content creation, 
-                      they are passionate about making mental health resources accessible to everyone.
-                    </p>
+                    <p>This mental health article is currently being prepared by our licensed professionals. Check back soon for the full evidence-based content!</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Tags */}
+              {post.metadata?.tags && post.metadata.tags.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-border">
+                  <h3 className="text-lg font-semibold mb-4">Related Topics:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.metadata.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        itemProp="keywords"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </article>
+
+        {/* Author Bio */}
+        {post.metadata?.author && (
+          <section className="py-16 bg-muted/30">
+            <div className="container">
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-background rounded-lg p-8" itemScope itemType="https://schema.org/Person">
+                  <div className="flex items-start gap-6">
+                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="w-8 h-8 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2" itemProp="name">About {post.metadata.author}</h3>
+                      <p className="text-muted-foreground" itemProp="description">
+                        {post.metadata.author} is a licensed mental health professional specializing in evidence-based 
+                        therapeutic approaches. With years of experience in clinical practice and content creation, 
+                        they are passionate about making mental health resources accessible to everyone.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </section>
+        )}
+
+        {/* Related Articles */}
+        <section className="py-16">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">Related Mental Health Articles</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Link href="/blog/overcoming-imposter-syndrome-therapist-guide" className="group">
+                  <article className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video bg-gradient-to-br from-primary/20 to-teal-600/20"></div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                        Overcoming Imposter Syndrome: A Therapist's Guide
+                      </h3>
+                      <p className="text-muted-foreground mt-2">
+                        Understanding imposter syndrome and practical strategies to build genuine confidence.
+                      </p>
+                    </div>
+                  </article>
+                </Link>
+                
+                <Link href="/blog/art-setting-boundaries-mental-health" className="group">
+                  <article className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video bg-gradient-to-br from-amber-100 to-amber-200"></div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                        The Art of Setting Boundaries: Protecting Your Mental Health
+                      </h3>
+                      <p className="text-muted-foreground mt-2">
+                        Learn how to set healthy boundaries in relationships and work.
+                      </p>
+                    </div>
+                  </article>
+                </Link>
+              </div>
+              
+              <div className="text-center mt-12">
+                <Link 
+                  href="/blog"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  View All Mental Health Articles
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
-      )}
-
-      {/* Related Articles */}
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Related Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <a href="/blog/overcoming-imposter-syndrome-therapist-guide" className="group">
-                <div className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gradient-to-br from-primary/20 to-teal-600/20"></div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
-                      Overcoming Imposter Syndrome: A Therapist's Guide
-                    </h3>
-                    <p className="text-muted-foreground mt-2">
-                      Understanding imposter syndrome and practical strategies to build genuine confidence.
-                    </p>
-                  </div>
-                </div>
-              </a>
-              
-              <a href="/blog/art-setting-boundaries-mental-health" className="group">
-                <div className="bg-muted rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video bg-gradient-to-br from-amber-100 to-amber-200"></div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold group-hover:text-primary transition-colors">
-                      The Art of Setting Boundaries: Protecting Your Mental Health
-                    </h3>
-                    <p className="text-muted-foreground mt-2">
-                      Learn how to set healthy boundaries in relationships and work.
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </div>
-            
-            <div className="text-center mt-12">
-              <Link 
-                href="/blog"
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-              >
-                View All Articles
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 }
