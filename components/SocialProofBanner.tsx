@@ -34,6 +34,12 @@ const SocialProofBanner: React.FC = () => {
   }, [proofItems.length]);
 
   const currentItem = proofItems[currentProof];
+  
+  // Add null check to prevent undefined access
+  if (!currentItem) {
+    return null;
+  }
+
   const Icon = currentItem.icon;
 
   return (

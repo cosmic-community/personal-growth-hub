@@ -94,6 +94,11 @@ const TestimonialsCarousel: React.FC = () => {
 
   const currentTestimonial = testimonials[currentIndex];
 
+  // Add null check to prevent undefined access
+  if (!currentTestimonial) {
+    return null;
+  }
+
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4">
