@@ -1,16 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import type { ProductCategory } from '@/types';
-import CategoryCard from './CategoryCard';
 import KonamiEasterEgg from './KonamiEasterEgg';
 import { Button } from './ui/Button';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-
-interface HeroProps {
-  categories: ProductCategory[];
-}
 
 const trustIndicators = [
   'Confidential & Secure',
@@ -31,7 +25,7 @@ const staggerContainer = {
   }
 };
 
-export default function Hero({ categories }: HeroProps) {
+export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Konami Code Easter Egg */}
@@ -67,7 +61,7 @@ export default function Hero({ categories }: HeroProps) {
             variants={fadeInUp}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
           >
-            What type of therapy are you looking for?
+            Professional mental health resources and personalized therapy consultations to help you thrive.
           </motion.p>
 
           <motion.div 
@@ -75,33 +69,17 @@ export default function Hero({ categories }: HeroProps) {
             variants={fadeInUp}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
           >
-            <Link href="/signup">
+            <Link href="/products">
               <Button size="lg" className="text-lg px-8 py-4">
-                Get Started
+                Explore Services
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
-              Learn More
-            </Button>
+            <Link href="/about">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white">
+                Learn More
+              </Button>
+            </Link>
           </motion.div>
-        </motion.div>
-
-        {/* Category Cards Grid */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16"
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-        >
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              variants={fadeInUp}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: index * 0.1 }}
-            >
-              <CategoryCard category={category} />
-            </motion.div>
-          ))}
         </motion.div>
 
         {/* Trust Indicators */}

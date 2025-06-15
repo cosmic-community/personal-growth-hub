@@ -1,7 +1,6 @@
 import { getProductCategories, getFeaturedProducts, getFeaturedReviews, getBlogPosts } from '@/lib/cosmic';
 import { generateSEOMetadata } from '@/lib/seo';
 import Hero from '@/components/Hero';
-import CategoryGrid from '@/components/CategoryGrid';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import ReviewsSection from '@/components/ReviewsSection';
 import BlogSection from '@/components/BlogSection';
@@ -34,8 +33,7 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default async function HomePage() {
   // Fetch all data in parallel for better performance
-  const [categories, featuredProducts, reviews, blogPosts] = await Promise.all([
-    getProductCategories(),
+  const [featuredProducts, reviews, blogPosts] = await Promise.all([
     getFeaturedProducts(),
     getFeaturedReviews(),
     getBlogPosts(3),
@@ -45,7 +43,7 @@ export default async function HomePage() {
     <div className="min-h-screen">
       {/* Hero Section with primary keywords */}
       <section itemScope itemType="https://schema.org/WebPage">
-        <Hero categories={categories} />
+        <Hero />
       </section>
       
       <SectionTransition variant="wave" color="primary" />
@@ -54,12 +52,6 @@ export default async function HomePage() {
         <TrustBadges />
       </section>
       <SectionTransition variant="wave" color="primary" flip />
-      
-      {/* Category Section with semantic markup */}
-      <section aria-labelledby="therapy-categories" itemScope itemType="https://schema.org/ItemList">
-        <h2 id="therapy-categories" className="sr-only">Mental Health Therapy Categories</h2>
-        <CategoryGrid categories={categories} />
-      </section>
       
       <SectionTransition variant="curve" color="secondary" />
       <section className="bg-slate-50 dark:bg-slate-950/30" aria-labelledby="featured-products">

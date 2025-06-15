@@ -1,7 +1,6 @@
-import { getProducts, getProductCategories } from '@/lib/cosmic';
+import { getProducts } from '@/lib/cosmic';
 import { Metadata } from 'next';
 import ProductGrid from '@/components/ProductGrid';
-import CategoryFilter from '@/components/CategoryFilter';
 
 export const metadata: Metadata = {
   title: 'Digital Products - TrueYou Therapy',
@@ -74,15 +73,9 @@ const staticProducts: StaticProduct[] = [
 
 export default async function ProductsPage() {
   let cosmicProducts: any[] = [];
-  let categories: any[] = [];
   
   try {
-    const [fetchedProducts, fetchedCategories] = await Promise.all([
-      getProducts(),
-      getProductCategories(),
-    ]);
-    cosmicProducts = fetchedProducts;
-    categories = fetchedCategories;
+    cosmicProducts = await getProducts();
   } catch (error) {
     console.error('Error fetching Cosmic data:', error);
     // Continue with static products only if Cosmic fails
@@ -167,9 +160,6 @@ export default async function ProductsPage() {
             ))}
           </div>
         </div>
-
-        {/* Category Filter - only show if we have Cosmic categories */}
-        {categories.length > 0 && <CategoryFilter categories={categories} />}
 
         {/* Products Grid - only show if we have Cosmic products */}
         {cosmicProducts.length > 0 && (
