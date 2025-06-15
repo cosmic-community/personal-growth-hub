@@ -1,127 +1,113 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
-interface AnimatedBackgroundProps {
-  variant?: 'particles' | 'waves' | 'gradient' | 'geometric';
-  className?: string;
-}
+export default function AnimatedBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-export default function AnimatedBackground({ variant = 'particles', className = '' }: AnimatedBackgroundProps) {
-  if (variant === 'particles') {
-    return (
-      <div className={`absolute inset-0 overflow-hidden ${className}`}>
-        {[...Array(50)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full"
-            initial={{
-              x: Math.random() * 100 + '%',
-              y: Math.random() * 100 + '%',
-              scale: Math.random() * 0.5 + 0.5,
-            }}
-            animate={{
-              y: [null, Math.random() * 100 + '%'],
-              x: [null, Math.random() * 100 + '%'],
-              scale: [null, Math.random() * 0.5 + 0.5],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'linear',
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  if (variant === 'waves') {
-    return (
-      <div className={`absolute inset-0 overflow-hidden ${className}`}>
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 1200 800"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(52, 211, 153, 0.1)" />
-              <stop offset="100%" stopColor="rgba(52, 211, 153, 0.05)" />
-            </linearGradient>
-          </defs>
-          <motion.path
-            d="M0,400 C300,300 600,500 1200,400 L1200,800 L0,800 Z"
-            fill="url(#wave-gradient)"
-            initial={{ d: "M0,400 C300,300 600,500 1200,400 L1200,800 L0,800 Z" }}
-            animate={{
-              d: [
-                "M0,400 C300,300 600,500 1200,400 L1200,800 L0,800 Z",
-                "M0,450 C300,350 600,550 1200,450 L1200,800 L0,800 Z",
-                "M0,400 C300,300 600,500 1200,400 L1200,800 L0,800 Z",
-              ],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        </svg>
-      </div>
-    );
-  }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  if (variant === 'gradient') {
-    return (
-      <motion.div
-        className={`absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 ${className}`}
-        animate={{
-          background: [
-            'linear-gradient(45deg, rgba(52, 211, 153, 0.1), transparent, rgba(161, 98, 7, 0.1))',
-            'linear-gradient(45deg, rgba(161, 98, 7, 0.1), transparent, rgba(52, 211, 153, 0.1))',
-            'linear-gradient(45deg, rgba(52, 211, 153, 0.1), transparent, rgba(161, 98, 7, 0.1))',
-          ],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-    );
-  }
+    // Set canvas size
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
 
-  if (variant === 'geometric') {
-    return (
-      <div className={`absolute inset-0 overflow-hidden ${className}`}>
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute border border-primary/10"
-            style={{
-              width: Math.random() * 100 + 50,
-              height: Math.random() * 100 + 50,
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-            }}
-            initial={{ rotate: 0, scale: 0.5, opacity: 0.3 }}
-            animate={{
-              rotate: 360,
-              scale: [0.5, 1, 0.5],
-              opacity: [0.3, 0.1, 0.3],
-            }}
-            transition={{
-              duration: Math.random() * 20 + 10,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-  return null;
+    // Particle system
+    const particles: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+      color: string;
+    }> = [];
+
+    const colors = [
+      'rgba(99, 102, 241, 0.4)',   // primary
+      'rgba(147, 51, 234, 0.4)',   // purple
+      'rgba(236, 72, 153, 0.4)',   // pink
+      'rgba(59, 130, 246, 0.4)',   // blue
+    ];
+
+    // Create particles
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 3 + 1,
+        opacity: Math.random() * 0.5 + 0.1,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+
+    let animationId: number;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw particles
+      particles.forEach((particle, index) => {
+        // Update position
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        // Bounce off edges
+        if (particle.x <= 0 || particle.x >= canvas.width) particle.vx *= -1;
+        if (particle.y <= 0 || particle.y >= canvas.height) particle.vy *= -1;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+
+        // Draw connections
+        particles.forEach((otherParticle, otherIndex) => {
+          if (index !== otherIndex) {
+            const dx = particle.x - otherParticle.x;
+            const dy = particle.y - otherParticle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 100) {
+              ctx.beginPath();
+              ctx.moveTo(particle.x, particle.y);
+              ctx.lineTo(otherParticle.x, otherParticle.y);
+              ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 100)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        });
+      });
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0 opacity-30"
+      style={{ background: 'transparent' }}
+    />
+  );
 }
