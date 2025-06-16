@@ -1,3 +1,5 @@
+// Newsletter and subscriber type definitions
+
 export interface NewsletterSubscriber {
   id: string;
   title: string;
@@ -8,7 +10,7 @@ export interface NewsletterSubscriber {
     email: string;
     signup_date: string;
     source: string;
-    status: string;
+    status: 'active' | 'unsubscribed' | 'pending';
   };
 }
 
@@ -19,29 +21,18 @@ export interface SubscriberStats {
   recentSignups: number;
 }
 
-export interface NewsletterSignupRequest {
+export interface ValidationResult {
+  isValid: boolean;
+  error?: string;
+}
+
+export interface CosmicError extends Error {
+  status?: number;
+  code?: string;
+  details?: any;
+}
+
+export interface NewsletterSignupData {
   email: string;
   source?: string;
-}
-
-export interface NewsletterSignupResponse {
-  success: boolean;
-  message: string;
-  subscriber?: NewsletterSubscriber;
-}
-
-export enum SubscriberStatus {
-  ACTIVE = 'active',
-  UNSUBSCRIBED = 'unsubscribed',
-  PENDING = 'pending'
-}
-
-export enum SignupSource {
-  NEWSLETTER_SIGNUP = 'newsletter_signup',
-  FOOTER = 'footer',
-  POPUP = 'popup',
-  SIDEBAR = 'sidebar',
-  HOMEPAGE = 'homepage',
-  BLOG = 'blog',
-  PRODUCT_PAGE = 'product_page'
 }
