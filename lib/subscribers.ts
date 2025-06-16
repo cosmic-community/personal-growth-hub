@@ -29,10 +29,10 @@ export async function addSubscriber(email: string, source: string = 'website'): 
       throw new Error('Email address is already subscribed');
     }
 
-    // Create new subscriber object
+    // Create new subscriber object - Note: using the exact object type name from Cosmic
     const subscriberData = {
       title: `Subscriber - ${email}`,
-      type: 'newsletter-subscribers',
+      type: 'newsletter-subscribers', // This should match your Cosmic object type exactly
       slug: `subscriber-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       metadata: {
         email: email,
@@ -57,15 +57,19 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     
     // Handle Cosmic API errors
     if (error?.status === 401) {
-      throw new Error('Authentication error. Please contact support.');
+      throw new Error('Authentication error. Check your Cosmic API credentials.');
     }
     
     if (error?.status === 403) {
-      throw new Error('Permission denied. Please contact support.');
+      throw new Error('Permission denied. Check your Cosmic write key permissions.');
+    }
+
+    if (error?.status === 422) {
+      throw new Error('Invalid data format. Check your object type and metafields in Cosmic.');
     }
     
     // For other errors, provide a more generic message
-    throw new Error('Failed to add subscriber. Please try again.');
+    throw new Error(`Failed to add subscriber: ${error.message || 'Unknown error'}`);
   }
 }
 

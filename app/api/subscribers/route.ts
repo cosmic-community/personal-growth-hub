@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
     console.log('Environment check:', {
       bucket: !!process.env.COSMIC_BUCKET_SLUG,
       readKey: !!process.env.COSMIC_READ_KEY,
-      writeKey: !!process.env.COSMIC_WRITE_KEY
+      writeKey: !!process.env.COSMIC_WRITE_KEY,
+      bucketSlug: process.env.COSMIC_BUCKET_SLUG ? process.env.COSMIC_BUCKET_SLUG.substring(0, 5) + '...' : 'missing'
     });
 
     // Validate request data
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Check environment variables
     if (!process.env.COSMIC_BUCKET_SLUG || !process.env.COSMIC_READ_KEY || !process.env.COSMIC_WRITE_KEY) {
-      console.error('Missing Cosmic environment variables');
+      console.error('Missing Cosmic environment variables - please check your .env file');
       return NextResponse.json(
         { error: 'Server configuration error. Please contact support.' },
         { status: 500 }
@@ -77,6 +78,13 @@ export async function POST(request: NextRequest) {
       if (error.message.includes('Authentication error') || error.message.includes('Permission denied')) {
         return NextResponse.json(
           { error: error.message },
+          { status: 500 }
+        );
+      }
+
+      if (error.message.includes('Invalid data format')) {
+        return NextResponse.json(
+          { error: 'Configuration error: Please check your Cosmic object type and metafields.' },
           { status: 500 }
         );
       }
