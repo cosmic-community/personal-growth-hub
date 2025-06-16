@@ -55,7 +55,7 @@ export function StayConnected() {
             </p>
           </div>
           
-          <NewsletterSignup source="stay connected section" />
+          <NewsletterSignup source="Stay Connected Section" />
           
           <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
