@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Heart, Mail, Phone, MapPin, Send, Sparkles } from 'lucide-react';
-import { Button } from './ui/Button';
 import { NewsletterSignup } from './NewsletterSignup';
 import EasterEgg from './EasterEgg';
 import { CosmicShowcaseModal } from './CosmicShowcaseModal';
