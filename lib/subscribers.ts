@@ -2,8 +2,8 @@ import { createBucketClient } from '@cosmicjs/sdk';
 import { sendWelcomeEmail } from './email';
 import type { NewsletterSubscriber, SubscriberStats, CosmicError } from '../types/newsletter';
 
-// Configuration
-const COSMIC_OBJECT_TYPE = process.env.COSMIC_NEWSLETTER_OBJECT_TYPE || 'subscribers';
+// Configuration - Use the correct object type from Cosmic CMS
+const COSMIC_OBJECT_TYPE = 'newsletter-subscribers';
 
 // Initialize Cosmic client for subscribers
 function createCosmicClient() {
@@ -20,34 +20,6 @@ function createCosmicClient() {
     readKey,
     writeKey,
   });
-}
-
-/**
- * Check if the subscribers object type exists in Cosmic CMS
- */
-async function ensureObjectTypeExists(): Promise<void> {
-  try {
-    const cosmic = createCosmicClient();
-    
-    // Try to fetch any existing subscribers to check if object type exists
-    await cosmic.objects
-      .find({ type: COSMIC_OBJECT_TYPE })
-      .props(['id'])
-      .limit(1);
-      
-  } catch (error: any) {
-    if (error?.status === 404) {
-      // Object type doesn't exist, we need to create it
-      console.log(`Object type '${COSMIC_OBJECT_TYPE}' not found. This is expected for first-time setup.`);
-      
-      // The object type will be created automatically when we insert the first subscriber
-      // No need to throw an error here
-      return;
-    }
-    
-    // If it's not a 404, re-throw the error
-    throw error;
-  }
 }
 
 /**
@@ -76,16 +48,16 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     const randomString = Math.random().toString(36).substr(2, 9);
     const slug = `subscriber-${timestamp}-${randomString}`;
 
-    // Create new subscriber object
+    // Create new subscriber object with correct metadata structure
     const subscriberData = {
-      title: `Subscriber - ${email}`,
+      title: `Newsletter Subscriber - ${email}`,
       type: COSMIC_OBJECT_TYPE,
       slug: slug,
       metadata: {
         email: email,
-        signup_date: new Date().toISOString(),
+        signup_date: new Date().toISOString().split('T')[0], // Format as YYYY-MM-DD for date field
         source: source,
-        status: 'active' as const
+        status: 'active' // Use the key value for select-dropdown
       }
     };
 
@@ -210,13 +182,13 @@ export async function findSubscriberByEmail(email: string): Promise<NewsletterSu
 /**
  * Update subscriber status (active, unsubscribed, etc.)
  */
-export async function updateSubscriberStatus(subscriberId: string, status: 'active' | 'unsubscribed' | 'bounced'): Promise<NewsletterSubscriber> {
+export async function updateSubscriberStatus(subscriberId: string, status: 'active' | 'unsubscribed' | 'pending'): Promise<NewsletterSubscriber> {
   try {
     const cosmic = createCosmicClient();
     
     const response = await cosmic.objects.updateOne(subscriberId, {
       metadata: {
-        status: status
+        status: status // Use the key value for select-dropdown
       }
     });
     
@@ -249,8 +221,16 @@ export async function getSubscriberStats(): Promise<SubscriberStats> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const active = subscribers.filter(sub => sub.metadata.status === 'active').length;
-    const unsubscribed = subscribers.filter(sub => sub.metadata.status === 'unsubscribed').length;
+    const active = subscribers.filter(sub => {
+      const status = typeof sub.metadata.status === 'string' ? sub.metadata.status : sub.metadata.status?.key;
+      return status === 'active';
+    }).length;
+    
+    const unsubscribed = subscribers.filter(sub => {
+      const status = typeof sub.metadata.status === 'string' ? sub.metadata.status : sub.metadata.status?.key;
+      return status === 'unsubscribed';
+    }).length;
+    
     const recentSignups = subscribers.filter(sub => 
       new Date(sub.metadata.signup_date) > sevenDaysAgo
     ).length;
