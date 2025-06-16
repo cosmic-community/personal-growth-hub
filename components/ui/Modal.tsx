@@ -1,42 +1,45 @@
 'use client';
 
-import * as React from 'react';
-import { createPortal } from 'react-dom';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from './Button';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
-  description?: string;
   children: React.ReactNode;
+  title?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
-  className?: string;
+  closeOnEscape?: boolean;
 }
 
 export function Modal({
   isOpen,
   onClose,
-  title,
-  description,
   children,
+  title,
   size = 'md',
   showCloseButton = true,
   closeOnOverlayClick = true,
-  className,
+  closeOnEscape = true,
 }: ModalProps) {
-  const [mounted, setMounted] = React.useState(false);
+  // Handle escape key
+  useEffect(() => {
+    if (!closeOnEscape || !isOpen) return;
 
-  React.useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
 
-  React.useEffect(() => {
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose, closeOnEscape]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -48,89 +51,57 @@ export function Modal({
     };
   }, [isOpen]);
 
+  if (!isOpen) return null;
+
+  const sizeClasses = {
+    sm: 'max-w-md',
+    md: 'max-w-lg',
+    lg: 'max-w-2xl',
+    xl: 'max-w-4xl',
+    full: 'max-w-7xl mx-4'
+  };
+
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (closeOnOverlayClick && e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  const handleEscapeKey = React.useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
-  React.useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-      return () => document.removeEventListener('keydown', handleEscapeKey);
-    }
-  }, [isOpen, handleEscapeKey]);
-
-  if (!mounted || !isOpen) {
-    return null;
-  }
-
-  return createPortal(
-    <div
+  return (
+    <div 
       className="fixed inset-0 z-50 flex items-center justify-center"
       onClick={handleOverlayClick}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in-0 duration-300" />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       
       {/* Modal */}
-      <div
-        className={cn(
-          'relative bg-background rounded-lg shadow-2xl border border-border animate-in zoom-in-95 fade-in-0 duration-300',
-          {
-            'max-w-sm w-full mx-4': size === 'sm',
-            'max-w-md w-full mx-4': size === 'md',
-            'max-w-lg w-full mx-4': size === 'lg',
-            'max-w-4xl w-full mx-4': size === 'xl',
-            'w-full h-full': size === 'full',
-          },
-          className
-        )}
-      >
+      <div className={`relative bg-white dark:bg-gray-900 rounded-lg shadow-2xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden`}>
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <div>
-              {title && (
-                <h2 className="text-lg font-semibold text-foreground">
-                  {title}
-                </h2>
-              )}
-              {description && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {description}
-                </p>
-              )}
-            </div>
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            {title && (
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {title}
+              </h2>
+            )}
             {showCloseButton && (
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 onClick={onClose}
-                className="rounded-full"
+                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="Close modal"
               >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </Button>
+                <X size={20} />
+              </button>
             )}
           </div>
         )}
 
         {/* Content */}
-        <div className={cn('p-6', !title && !showCloseButton && 'pt-6')}>
+        <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
           {children}
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
