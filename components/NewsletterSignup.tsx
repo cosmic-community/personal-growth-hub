@@ -26,7 +26,7 @@ export function NewsletterSignup() {
         },
         body: JSON.stringify({
           email: email.trim(),
-          source: 'newsletter_signup'
+          source: 'website signup'
         }),
       });
 

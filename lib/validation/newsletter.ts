@@ -53,6 +53,7 @@ export function validateSource(source: string): ValidationResult {
   }
 
   const validSources = [
+    'website signup',
     'newsletter_signup',
     'footer',
     'popup', 
