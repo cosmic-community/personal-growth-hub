@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Mail, Users, TrendingUp, UserX, Calendar, ExternalLink, Trash2, Eye, EyeOff } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
-import { LoadingSpinner } from './LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';
 
 interface NewsletterSubscriber {
   id: string;
