@@ -45,10 +45,20 @@ export async function addSubscriber(email: string, source: string = 'website'): 
       }
     };
 
+    console.log('Adding subscriber to Cosmic:', subscriberData);
     const response = await cosmic.objects.insertOne(subscriberData);
+    console.log('Cosmic response:', response);
+    
     return response.object as NewsletterSubscriber;
   } catch (error) {
     console.error('Error adding subscriber:', error);
+    
+    // If it's already subscribed, throw that specific error
+    if (error instanceof Error && error.message === 'Email address is already subscribed') {
+      throw error;
+    }
+    
+    // For other errors, provide a more generic message
     throw new Error('Failed to add subscriber. Please try again.');
   }
 }
@@ -65,9 +75,9 @@ export async function getAllSubscribers(): Promise<NewsletterSubscriber[]> {
       .limit(1000);
     
     return response.objects as NewsletterSubscriber[];
-  } catch (error) {
+  } catch (error: any) {
     // Handle 404 error when no subscribers exist yet
-    if (error && typeof error === 'object' && 'status' in error && error.status === 404) {
+    if (error?.status === 404) {
       return [];
     }
     console.error('Error fetching subscribers:', error);
@@ -89,9 +99,9 @@ export async function findSubscriberByEmail(email: string): Promise<NewsletterSu
       .limit(1);
     
     return response.objects.length > 0 ? response.objects[0] as NewsletterSubscriber : null;
-  } catch (error) {
+  } catch (error: any) {
     // Handle 404 error when subscriber doesn't exist
-    if (error && typeof error === 'object' && 'status' in error && error.status === 404) {
+    if (error?.status === 404) {
       return null;
     }
     console.error('Error finding subscriber by email:', error);

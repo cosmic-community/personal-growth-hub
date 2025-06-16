@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, source = 'website' } = body;
 
+    console.log('Received subscription request:', { email, source });
+
     if (!email) {
       return NextResponse.json(
         { error: 'Email is required' },
@@ -35,7 +37,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check environment variables
+    if (!process.env.COSMIC_BUCKET_SLUG || !process.env.COSMIC_READ_KEY || !process.env.COSMIC_WRITE_KEY) {
+      console.error('Missing Cosmic environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      );
+    }
+
     const subscriber = await addSubscriber(email, source);
+    
+    console.log('Successfully added subscriber:', subscriber);
+    
     return NextResponse.json({ 
       success: true,
       message: 'Successfully subscribed to newsletter!',

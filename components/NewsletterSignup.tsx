@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Mail, Check, AlertCircle } from 'lucide-react';
+import { Mail, Check, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
 
 export function NewsletterSignup() {
@@ -18,18 +18,21 @@ export function NewsletterSignup() {
     setError(null);
     
     try {
+      console.log('Submitting newsletter signup:', email);
+      
       const response = await fetch('/api/subscribers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
+          email: email.trim(),
           source: 'newsletter_signup'
         }),
       });
 
       const data = await response.json();
+      console.log('API response:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to subscribe');
@@ -78,9 +81,16 @@ export function NewsletterSignup() {
         <Button 
           type="submit" 
           disabled={isLoading || !email.trim()}
-          className="px-6 whitespace-nowrap"
+          className="px-6 whitespace-nowrap flex items-center gap-2"
         >
-          {isLoading ? 'Subscribing...' : 'Subscribe'}
+          {isLoading ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Subscribing...
+            </>
+          ) : (
+            'Subscribe'
+          )}
         </Button>
       </form>
 
