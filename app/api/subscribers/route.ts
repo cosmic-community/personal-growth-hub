@@ -31,8 +31,12 @@ export async function POST(request: NextRequest) {
     // Validate request data
     const validation = validateNewsletterSignup(body);
     if (!validation.isValid) {
+      const errorMessage = typeof validation.error === 'string' 
+        ? validation.error 
+        : validation.error?.message || 'Invalid request data';
+      
       return NextResponse.json(
-        { error: validation.error || 'Invalid request data' },
+        { error: errorMessage },
         { status: 400 }
       );
     }
