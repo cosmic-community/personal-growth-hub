@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllSubscribers, addSubscriber } from '../../../lib/subscribers';
-import { validateNewsletterSignup, sanitizeEmail } from '../../../lib/validation/newsletter';
+import { validateNewsletterSignup, sanitizeEmail, validateSource } from '../../../lib/validation/newsletter';
 
 export async function GET() {
   try {
@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
       bucket: !!process.env.COSMIC_BUCKET_SLUG,
       readKey: !!process.env.COSMIC_READ_KEY,
       writeKey: !!process.env.COSMIC_WRITE_KEY,
-      bucketSlug: process.env.COSMIC_BUCKET_SLUG ? process.env.COSMIC_BUCKET_SLUG.substring(0, 5) + '...' : 'missing'
+      bucketSlug: process.env.COSMIC_BUCKET_SLUG ? process.env.COSMIC_BUCKET_SLUG.substring(0, 5) + '...' : 'missing',
+      objectType: process.env.COSMIC_NEWSLETTER_OBJECT_TYPE || 'subscribers'
     });
 
     // Validate request data
@@ -36,8 +37,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { source = 'website' } = body;
     const email = sanitizeEmail(body.email);
+    const source = validateSource(body.source);
 
     // Check environment variables
     if (!process.env.COSMIC_BUCKET_SLUG || !process.env.COSMIC_READ_KEY || !process.env.COSMIC_WRITE_KEY) {
@@ -68,26 +69,25 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      if (error.message.includes('Server configuration error')) {
+      if (error.message.includes('Server configuration error') || error.message.includes('Please contact support')) {
         return NextResponse.json(
           { error: error.message },
           { status: 500 }
         );
       }
       
-      if (error.message.includes('Authentication error') || error.message.includes('Permission denied')) {
+      if (error.message.includes('Object type') && error.message.includes('not found')) {
         return NextResponse.json(
-          { error: error.message },
+          { error: 'Newsletter service temporarily unavailable. Please try again later or contact support.' },
           { status: 500 }
         );
       }
 
-      if (error.message.includes('Invalid data format')) {
-        return NextResponse.json(
-          { error: 'Configuration error: Please check your Cosmic object type and metafields.' },
-          { status: 500 }
-        );
-      }
+      // Return the actual error message for debugging
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(
