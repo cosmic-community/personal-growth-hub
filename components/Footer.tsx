@@ -49,7 +49,7 @@ export default function Footer() {
                 Get weekly insights, tips, and resources delivered to your inbox. 
                 Join thousands on their personal growth journey.
               </p>
-              <NewsletterSignup />
+              <NewsletterSignup source="footer signup" />
             </div>
           </div>
 
