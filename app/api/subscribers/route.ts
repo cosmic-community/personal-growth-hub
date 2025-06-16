@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllSubscribers, addSubscriber } from '../../../lib/subscribers';
+import { validateNewsletterSignup, sanitizeEmail } from '../../../lib/validation/newsletter';
 
 export async function GET() {
   try {
@@ -17,30 +18,25 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, source = 'website' } = body;
-
-    console.log('Received subscription request:', { email, source });
+    
+    console.log('Received subscription request:', body);
     console.log('Environment check:', {
       bucket: !!process.env.COSMIC_BUCKET_SLUG,
       readKey: !!process.env.COSMIC_READ_KEY,
       writeKey: !!process.env.COSMIC_WRITE_KEY
     });
 
-    if (!email) {
+    // Validate request data
+    const validation = validateNewsletterSignup(body);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: validation.error },
         { status: 400 }
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    const { source = 'website' } = body;
+    const email = sanitizeEmail(body.email);
 
     // Check environment variables
     if (!process.env.COSMIC_BUCKET_SLUG || !process.env.COSMIC_READ_KEY || !process.env.COSMIC_WRITE_KEY) {

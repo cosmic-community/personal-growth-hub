@@ -1,18 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk';
-
-export interface NewsletterSubscriber {
-  id: string;
-  title: string;
-  slug: string;
-  created_at: string;
-  modified_at: string;
-  metadata: {
-    email: string;
-    signup_date: string;
-    source: string;
-    status: string;
-  };
-}
+import type { NewsletterSubscriber, SubscriberStats } from '@/types/newsletter';
 
 // Initialize Cosmic client for subscribers
 const cosmic = createBucketClient({
@@ -161,12 +148,7 @@ export async function deleteSubscriber(subscriberId: string): Promise<void> {
 /**
  * Get subscriber statistics
  */
-export async function getSubscriberStats(): Promise<{
-  total: number;
-  active: number;
-  unsubscribed: number;
-  recentSignups: number;
-}> {
+export async function getSubscriberStats(): Promise<SubscriberStats> {
   try {
     const subscribers = await getAllSubscribers();
     const sevenDaysAgo = new Date();
