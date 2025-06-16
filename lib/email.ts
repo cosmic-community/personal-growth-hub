@@ -29,7 +29,7 @@ function createTransporter(): nodemailer.Transporter {
     },
   };
 
-  return nodemailer.createTransporter(config);
+  return nodemailer.createTransport(config);
 }
 
 /**
