@@ -44,12 +44,9 @@ export function validateEmail(email: string): ValidationResult {
 /**
  * Validate signup source
  */
-export function validateSource(source: string): ValidationResult {
+export function validateSource(source: string): string {
   if (!source || typeof source !== 'string') {
-    return {
-      isValid: false,
-      error: 'Source is required'
-    };
+    return 'website signup';
   }
 
   const validSources = [
@@ -65,13 +62,10 @@ export function validateSource(source: string): ValidationResult {
   ];
 
   if (!validSources.includes(source)) {
-    return {
-      isValid: false,
-      error: 'Invalid signup source'
-    };
+    return 'website signup';
   }
 
-  return { isValid: true };
+  return source;
 }
 
 /**
@@ -99,13 +93,6 @@ export function validateNewsletterSignup(data: any): ValidationResult {
   const emailValidation = validateEmail(data.email);
   if (!emailValidation.isValid) {
     return emailValidation;
-  }
-
-  if (data.source) {
-    const sourceValidation = validateSource(data.source);
-    if (!sourceValidation.isValid) {
-      return sourceValidation;
-    }
   }
 
   return { isValid: true };

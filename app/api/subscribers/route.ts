@@ -31,12 +31,8 @@ export async function POST(request: NextRequest) {
     // Validate request data
     const validation = validateNewsletterSignup(body);
     if (!validation.isValid) {
-      const errorMessage = typeof validation.error === 'string' 
-        ? validation.error 
-        : validation.error?.message || 'Invalid request data';
-      
       return NextResponse.json(
-        { error: errorMessage },
+        { error: validation.error || 'Invalid request data' },
         { status: 400 }
       );
     }
@@ -62,9 +58,10 @@ export async function POST(request: NextRequest) {
       message: 'Successfully subscribed to newsletter!',
       subscriber 
     }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error adding subscriber:', error);
     
+    // Type guard to check if error is an Error instance
     if (error instanceof Error) {
       if (error.message === 'Email address is already subscribed') {
         return NextResponse.json(
@@ -94,6 +91,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Handle unknown error types
     return NextResponse.json(
       { error: 'Failed to subscribe. Please try again later.' },
       { status: 500 }
