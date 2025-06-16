@@ -50,12 +50,12 @@ const VideoPreview: React.FC = () => {
           </button>
           <div className="aspect-video bg-gray-900 flex items-center justify-center">
             <iframe
-              src="https://player.vimeo.com/video/example?autoplay=1"
+              src="https://www.youtube.com/embed/ZXsQAXx_ao0?autoplay=1&rel=0&modestbranding=1"
               className="w-full h-full"
               frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              title="Video Series Preview"
+              title="Video Series Preview - Sample Motivational Content"
             />
           </div>
         </div>
