@@ -85,7 +85,7 @@ export async function addSubscriber(email: string, source: string = 'website'): 
         email: email,
         signup_date: new Date().toISOString(),
         source: source,
-        status: 'active'
+        status: 'active' as const
       }
     };
 
@@ -210,7 +210,7 @@ export async function findSubscriberByEmail(email: string): Promise<NewsletterSu
 /**
  * Update subscriber status (active, unsubscribed, etc.)
  */
-export async function updateSubscriberStatus(subscriberId: string, status: string): Promise<NewsletterSubscriber> {
+export async function updateSubscriberStatus(subscriberId: string, status: 'active' | 'unsubscribed' | 'bounced'): Promise<NewsletterSubscriber> {
   try {
     const cosmic = createCosmicClient();
     
