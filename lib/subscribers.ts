@@ -147,7 +147,7 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     console.error('Full error details:', {
       message: error.message,
       status: cosmicError.status,
-      response: cosmicError.response,
+      details: cosmicError.details,
       stack: error.stack
     });
     
