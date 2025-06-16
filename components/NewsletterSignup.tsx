@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Mail, Check, AlertCircle, Loader2 } from 'lucide-react';
-import { Button } from './ui/Button';
 
 export function NewsletterSignup() {
   const [email, setEmail] = useState('');
@@ -32,7 +31,7 @@ export function NewsletterSignup() {
       });
 
       const data = await response.json();
-      console.log('API response:', data);
+      console.log('API response:', { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to subscribe');
@@ -45,7 +44,7 @@ export function NewsletterSignup() {
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Newsletter signup error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while subscribing. Please try again.');
     } finally {
@@ -66,22 +65,22 @@ export function NewsletterSignup() {
     <div className="max-w-md mx-auto">
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
-          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="w-full pl-10 pr-4 py-3 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Email address"
             disabled={isLoading}
           />
         </div>
-        <Button 
+        <button 
           type="submit" 
           disabled={isLoading || !email.trim()}
-          className="px-6 whitespace-nowrap flex items-center gap-2"
+          className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap flex items-center gap-2 justify-center"
         >
           {isLoading ? (
             <>
@@ -91,7 +90,7 @@ export function NewsletterSignup() {
           ) : (
             'Subscribe'
           )}
-        </Button>
+        </button>
       </form>
 
       {error && (
@@ -100,6 +99,10 @@ export function NewsletterSignup() {
           <span className="text-sm">{error}</span>
         </div>
       )}
+      
+      <p className="text-xs text-gray-500 mt-2 text-center">
+        We respect your privacy and will never spam you.
+      </p>
     </div>
   );
 }

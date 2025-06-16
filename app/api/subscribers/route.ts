@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
     const { email, source = 'website' } = body;
 
     console.log('Received subscription request:', { email, source });
+    console.log('Environment check:', {
+      bucket: !!process.env.COSMIC_BUCKET_SLUG,
+      readKey: !!process.env.COSMIC_READ_KEY,
+      writeKey: !!process.env.COSMIC_WRITE_KEY
+    });
 
     if (!email) {
       return NextResponse.json(
@@ -55,7 +60,7 @@ export async function POST(request: NextRequest) {
       message: 'Successfully subscribed to newsletter!',
       subscriber 
     }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error adding subscriber:', error);
     
     if (error instanceof Error) {
@@ -63,6 +68,20 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           { error: 'This email address is already subscribed to our newsletter.' },
           { status: 409 }
+        );
+      }
+      
+      if (error.message.includes('Server configuration error')) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 500 }
+        );
+      }
+      
+      if (error.message.includes('Authentication error') || error.message.includes('Permission denied')) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 500 }
         );
       }
     }

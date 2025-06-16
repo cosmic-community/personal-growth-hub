@@ -26,6 +26,16 @@ const cosmic = createBucketClient({
  */
 export async function addSubscriber(email: string, source: string = 'website'): Promise<NewsletterSubscriber> {
   try {
+    // Validate environment variables
+    if (!process.env.COSMIC_BUCKET_SLUG || !process.env.COSMIC_READ_KEY || !process.env.COSMIC_WRITE_KEY) {
+      console.error('Missing Cosmic environment variables:', {
+        bucket: !!process.env.COSMIC_BUCKET_SLUG,
+        readKey: !!process.env.COSMIC_READ_KEY,
+        writeKey: !!process.env.COSMIC_WRITE_KEY
+      });
+      throw new Error('Server configuration error. Missing Cosmic credentials.');
+    }
+
     // Check if subscriber already exists
     const existingSubscriber = await findSubscriberByEmail(email);
     if (existingSubscriber) {
@@ -35,7 +45,7 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     // Create new subscriber object
     const subscriberData = {
       title: `Subscriber - ${email}`,
-      type: 'subscribers',
+      type: 'newsletter-subscribers',
       slug: `subscriber-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       metadata: {
         email: email,
@@ -50,12 +60,21 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     console.log('Cosmic response:', response);
     
     return response.object as NewsletterSubscriber;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error adding subscriber:', error);
     
     // If it's already subscribed, throw that specific error
     if (error instanceof Error && error.message === 'Email address is already subscribed') {
       throw error;
+    }
+    
+    // Handle Cosmic API errors
+    if (error?.status === 401) {
+      throw new Error('Authentication error. Please contact support.');
+    }
+    
+    if (error?.status === 403) {
+      throw new Error('Permission denied. Please contact support.');
     }
     
     // For other errors, provide a more generic message
@@ -69,7 +88,7 @@ export async function addSubscriber(email: string, source: string = 'website'): 
 export async function getAllSubscribers(): Promise<NewsletterSubscriber[]> {
   try {
     const response = await cosmic.objects
-      .find({ type: 'subscribers' })
+      .find({ type: 'newsletter-subscribers' })
       .props(['id', 'title', 'slug', 'created_at', 'modified_at', 'metadata'])
       .sort('-created_at')
       .limit(1000);
@@ -92,7 +111,7 @@ export async function findSubscriberByEmail(email: string): Promise<NewsletterSu
   try {
     const response = await cosmic.objects
       .find({ 
-        type: 'subscribers',
+        type: 'newsletter-subscribers',
         'metadata.email': email 
       })
       .props(['id', 'title', 'slug', 'created_at', 'modified_at', 'metadata'])
