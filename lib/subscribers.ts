@@ -213,6 +213,19 @@ export async function deleteSubscriber(subscriberId: string): Promise<void> {
 }
 
 /**
+ * Helper function to safely get status key from status field
+ */
+function getStatusKey(status: any): string {
+  if (typeof status === 'string') {
+    return status;
+  }
+  if (status && typeof status === 'object' && 'key' in status) {
+    return status.key || '';
+  }
+  return '';
+}
+
+/**
  * Get subscriber statistics
  */
 export async function getSubscriberStats(): Promise<SubscriberStats> {
@@ -222,13 +235,13 @@ export async function getSubscriberStats(): Promise<SubscriberStats> {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const active = subscribers.filter(sub => {
-      const status = typeof sub.metadata.status === 'string' ? sub.metadata.status : sub.metadata.status?.key;
-      return status === 'active';
+      const statusKey = getStatusKey(sub.metadata.status);
+      return statusKey === 'active';
     }).length;
     
     const unsubscribed = subscribers.filter(sub => {
-      const status = typeof sub.metadata.status === 'string' ? sub.metadata.status : sub.metadata.status?.key;
-      return status === 'unsubscribed';
+      const statusKey = getStatusKey(sub.metadata.status);
+      return statusKey === 'unsubscribed';
     }).length;
     
     const recentSignups = subscribers.filter(sub => 
