@@ -23,6 +23,34 @@ function createCosmicClient() {
 }
 
 /**
+ * Check if the subscribers object type exists in Cosmic CMS
+ */
+async function ensureObjectTypeExists(): Promise<void> {
+  try {
+    const cosmic = createCosmicClient();
+    
+    // Try to fetch any existing subscribers to check if object type exists
+    await cosmic.objects
+      .find({ type: COSMIC_OBJECT_TYPE })
+      .props(['id'])
+      .limit(1);
+      
+  } catch (error: any) {
+    if (error?.status === 404) {
+      // Object type doesn't exist, we need to create it
+      console.log(`Object type '${COSMIC_OBJECT_TYPE}' not found. This is expected for first-time setup.`);
+      
+      // The object type will be created automatically when we insert the first subscriber
+      // No need to throw an error here
+      return;
+    }
+    
+    // If it's not a 404, re-throw the error
+    throw error;
+  }
+}
+
+/**
  * Add a new newsletter subscriber to Cosmic CMS
  */
 export async function addSubscriber(email: string, source: string = 'website'): Promise<NewsletterSubscriber> {
@@ -30,6 +58,12 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     const cosmic = createCosmicClient();
     
     console.log('Adding subscriber with object type:', COSMIC_OBJECT_TYPE);
+    console.log('Cosmic environment check:', {
+      bucketSlug: process.env.COSMIC_BUCKET_SLUG?.substring(0, 10) + '...',
+      hasReadKey: !!process.env.COSMIC_READ_KEY,
+      hasWriteKey: !!process.env.COSMIC_WRITE_KEY,
+      objectType: COSMIC_OBJECT_TYPE
+    });
 
     // Check if subscriber already exists
     const existingSubscriber = await findSubscriberByEmail(email);
@@ -86,24 +120,39 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     
     // Handle Cosmic API errors
     const cosmicError = error as CosmicError;
+    
     if (cosmicError.status === 401) {
+      console.error('Cosmic API authentication failed - check your COSMIC_READ_KEY and COSMIC_WRITE_KEY');
       throw new Error('Authentication error. Please contact support.');
     }
     
     if (cosmicError.status === 403) {
+      console.error('Cosmic API permission denied - check your API key permissions');
       throw new Error('Permission denied. Please contact support.');
     }
 
     if (cosmicError.status === 422) {
+      console.error('Cosmic API validation error:', cosmicError);
       throw new Error('Invalid data format. Please contact support.');
     }
 
     if (cosmicError.status === 404) {
-      throw new Error(`Object type '${COSMIC_OBJECT_TYPE}' not found. Please check your Cosmic CMS configuration.`);
+      console.error(`Cosmic API 404 error - this might be the first subscriber or object type '${COSMIC_OBJECT_TYPE}' doesn't exist`);
+      
+      // For 404 errors during creation, provide more helpful guidance
+      throw new Error(`Setup required: Please ensure the '${COSMIC_OBJECT_TYPE}' object type exists in your Cosmic CMS bucket, or contact support for assistance.`);
     }
     
-    // For other errors, provide a more generic message
-    throw new Error(`Failed to add subscriber: ${error.message || 'Unknown error'}`);
+    // Log the full error for debugging
+    console.error('Full error details:', {
+      message: error.message,
+      status: cosmicError.status,
+      response: cosmicError.response,
+      stack: error.stack
+    });
+    
+    // For other errors, provide a more generic message but include some debugging info
+    throw new Error(`Failed to add subscriber. Error: ${error.message || 'Unknown error'}`);
   }
 }
 

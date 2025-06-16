@@ -77,14 +77,22 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      if (error.message.includes('Object type') && error.message.includes('not found')) {
+      if (error.message.includes('Setup required') || error.message.includes('object type')) {
         return NextResponse.json(
-          { error: 'Newsletter service temporarily unavailable. Please try again later or contact support.' },
+          { error: error.message },
           { status: 500 }
         );
       }
 
-      // Return the actual error message for debugging
+      // For authentication/permission errors
+      if (error.message.includes('Authentication error') || error.message.includes('Permission denied')) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: 500 }
+        );
+      }
+
+      // Return the actual error message for better debugging
       return NextResponse.json(
         { error: error.message },
         { status: 500 }
