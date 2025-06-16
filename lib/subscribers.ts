@@ -1,4 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk';
+import { sendWelcomeEmail } from './email';
 import type { NewsletterSubscriber, SubscriberStats } from '@/types/newsletter';
 
 // Initialize Cosmic client for subscribers
@@ -45,6 +46,12 @@ export async function addSubscriber(email: string, source: string = 'website'): 
     console.log('Adding subscriber to Cosmic:', subscriberData);
     const response = await cosmic.objects.insertOne(subscriberData);
     console.log('Cosmic response:', response);
+    
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(email).catch(error => {
+      console.error('Failed to send welcome email:', error);
+      // Don't throw error here - subscription should succeed even if email fails
+    });
     
     return response.object as NewsletterSubscriber;
   } catch (error: any) {
