@@ -43,7 +43,8 @@ export function NewsletterSignup() {
         setIsSubmitted(false);
       }, 5000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Newsletter signup error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while subscribing. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +77,7 @@ export function NewsletterSignup() {
         </div>
         <Button 
           type="submit" 
-          disabled={isLoading || !email}
+          disabled={isLoading || !email.trim()}
           className="px-6 whitespace-nowrap"
         >
           {isLoading ? 'Subscribing...' : 'Subscribe'}

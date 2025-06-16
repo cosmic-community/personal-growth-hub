@@ -36,19 +36,25 @@ export async function POST(request: NextRequest) {
     }
 
     const subscriber = await addSubscriber(email, source);
-    return NextResponse.json({ subscriber }, { status: 201 });
+    return NextResponse.json({ 
+      success: true,
+      message: 'Successfully subscribed to newsletter!',
+      subscriber 
+    }, { status: 201 });
   } catch (error) {
     console.error('Error adding subscriber:', error);
     
-    if (error instanceof Error && error.message === 'Email address is already subscribed') {
-      return NextResponse.json(
-        { error: 'Email address is already subscribed' },
-        { status: 409 }
-      );
+    if (error instanceof Error) {
+      if (error.message === 'Email address is already subscribed') {
+        return NextResponse.json(
+          { error: 'This email address is already subscribed to our newsletter.' },
+          { status: 409 }
+        );
+      }
     }
 
     return NextResponse.json(
-      { error: 'Failed to add subscriber' },
+      { error: 'Failed to subscribe. Please try again later.' },
       { status: 500 }
     );
   }
